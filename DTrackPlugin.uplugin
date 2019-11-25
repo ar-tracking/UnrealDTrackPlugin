@@ -1,0 +1,30 @@
+{
+	"FileVersion": 1,
+	"Version": 1,
+	"VersionName": "0.7.1",
+	"FriendlyName": "DTrack Plugin",
+	"CreatedBy": "Advanced Realtime Tracking GmbH",
+	"CreatedByURL": "https://ar-tracking.com",
+	"Description": "Plugin for the ART DTrack tracking system.",
+	"Category": "Virtual Production",
+
+	"Modules": [
+		{
+			"Name": "DTrackPlugin",
+			"Type": "Runtime",
+			"WhitelistPlatforms": [ "Win64" ]
+		},
+		{
+			"Name": "DTrackInput",
+			"Type": "Runtime",
+			"WhitelistPlatforms": [ "Win64" ]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "LiveLink",
+			"Enabled": true
+		}
+	],
+	"CanContainContent": false
+}
