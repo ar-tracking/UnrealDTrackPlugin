@@ -28,7 +28,13 @@
 
 #include "ILiveLinkSource.h"
 
+// Avoid 'warning C4005' when including DTrackSDK
+#include "Windows/AllowWindowsPlatformTypes.h"
+#include "Windows/PreWindowsApi.h"
 #include "DTrackSDK.hpp"
+#include "Windows/PostWindowsApi.h"
+#include "Windows/HideWindowsPlatformTypes.h"
+
 #include "HAL/Runnable.h"
 #include "HAL/ThreadSafeBool.h"
 

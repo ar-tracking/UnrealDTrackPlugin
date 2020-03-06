@@ -27,10 +27,11 @@
 #pragma once
 
 #include "ILiveLinkSource.h"
-
 #include "DTrackLiveLinkTypes.h"
-
 #include "DTrackLiveLinkSourceSettings.h"
+
+#include "Runtime/Launch/Resources/Version.h" 
+
 
 class FDTrackSDKHandler;
 class ILiveLinkClient;
@@ -51,7 +52,13 @@ public:
 	virtual FText GetSourceType() const override;
 	virtual FText GetSourceMachineName() const override;
 	virtual FText GetSourceStatus() const override;
+	
+#if ENGINE_MINOR_VERSION >= 24
+	virtual TSubclassOf<ULiveLinkSourceSettings>  GetSettingsClass() const override;
+#else
 	virtual UClass* GetCustomSettingsClass() const;
+#endif
+
 	virtual void OnSettingsChanged(ULiveLinkSourceSettings* InSettings, const FPropertyChangedEvent& InPropertyChangedEvent) override;
 	//~ End ILiveLinkSource
 

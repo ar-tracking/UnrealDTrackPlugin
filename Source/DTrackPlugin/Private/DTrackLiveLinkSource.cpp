@@ -67,10 +67,19 @@ FText FDTrackLiveLinkSource::GetSourceStatus() const {
 	return FText::Format(LOCTEXT("SourceStatus", "{0}"), FText::FromString(m_sdk_handler->get_status()));
 }
 
-UClass* FDTrackLiveLinkSource::GetCustomSettingsClass() const {
 
-	return UDTrackLiveLinkSourceSettings::StaticClass();
-}
+
+#if ENGINE_MINOR_VERSION >= 24
+	TSubclassOf<ULiveLinkSourceSettings>  FDTrackLiveLinkSource::GetSettingsClass() const {
+		return UDTrackLiveLinkSourceSettings::StaticClass();
+	}
+#else	
+	UClass* FDTrackLiveLinkSource::GetCustomSettingsClass() const {
+		return UDTrackLiveLinkSourceSettings::StaticClass();
+	}	
+#endif
+
+
 
 void FDTrackLiveLinkSource::OnSettingsChanged(ULiveLinkSourceSettings* InSettings, const FPropertyChangedEvent& InPropertyChangedEvent) {
 

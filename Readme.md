@@ -1,40 +1,29 @@
 # DTrack Plugin for Unreal Engine 4
 
-This is a plug-in for the Unreal Engine 4.23 or later with the purpose of native integration of the Advanded Realtime Tracking DTrack and DTrack2 tracking solutions. It injects data into the engine through LiveLink. Data can be accessed through Blueprint or C++. The plugin currently supports the DTrack body`6d`and flystick`6df2`data format.
+This is a plug-in for the Unreal Engine with the purpose of native integration of the Advanded Realtime Tracking DTrack and DTrack2 tracking solutions. It injects data into the engine through LiveLink. Data can be accessed through Blueprint or C++. The plugin currently supports the DTrack body`6d`and flystick`6df2`data format.
 
 
 ## Prerequisites
 
 - Unreal Engine 4.23 or later
-- Windows 64 bit
+- Windows
 - Microsoft Visual Studio 2015 or later (Express or Community Edition should suffice)
-- ART [DTrackSDK](http://github.com/ar-tracking/DTrackSDK)
 
 
 ## Installation
 
-### Prepare the DTrackSDK library
-- Download the [DTrackSDK](http://github.com/ar-tracking/DTrackSDK) source
-- Build a static 64bit library *DTrackSDK.lib*. <br>Make sure to use the same Visual Studio version as you use with UE4Editor, and compile for the x64 platform.<br>You can find a general guide on how to configure VS for static libraries [here](https://docs.microsoft.com/de-de/cpp/build/walkthrough-creating-and-using-a-static-library-cpp?view=vs-2017).
-
-
 
 ### Install into the global Engine plugin folder
-- Copy *DTrackSDK.lib* to the plugin source directory *DTrackPlugin\ThirdParty\DTrackSDK\Lib*
-- Copy the DTrackSDK *include* directory to the plugin source directory *DTrackPlugin\ThirdParty\DTrackSDK\Include*
-- Compile the plugin manually:<br> *&lt;UE4Dir&gt;\Engine\Build\BatchFiles\RunUAT.bat* BuildPlugin -Plugin=*DTrackPlugin.uplugin* - TargetPlatforms=Win64 -Package=*&lt;OutDir&gt;* -Rocket
-- In case you later want to package your projects with DTrack for shipping: Copy *DTrackSDK.lib* to *&lt;OutDir&gt;\Thirdparty\DTrackSDK\Lib*
-- Copy *&lt;OutDir&gt;* to *&lt;UE4Dir&gt;\Engine\Plugins*
+- Compile the plugin manually:<br> *&lt;UE4Dir&gt;\Engine\Build\BatchFiles\RunUAT.bat* BuildPlugin -Plugin=*/Path/to/DTrackPlugin.uplugin* -TargetPlatforms=Win64 -Package=*&lt;OutDir&gt;* -Rocket
+- Copy *&lt;OutDir&gt;* to *&lt;UE4Dir&gt;\Engine\Plugins\DTrackPlugin*
 
 
 
 ### Alternatively, install into your local project plugin folder
 - Open the UE4Editor and create an Unreal C++ project
 - Copy the plugin to *&lt;project&gt;\Plugins\DTrackPlugin*
-- Copy *DTrackSDK.lib* to *&lt;project&gt;\Plugins\DTrackPlugin\ThirdParty\DTrackSDK\Lib*
 - Compilation then takes place automatically when starting your Unreal project
 
-To edit the plugin source yourself, install the plugin into the local project folder and update the Visual Studio project files.
 
 
 ## DTrack Configuration

@@ -31,6 +31,10 @@ namespace UnrealBuildTool.Rules
 	{
 		public DTrackInput(ReadOnlyTargetRules Target) : base(Target)
 		{
+			bPrecompile = true;
+			PrivatePCHHeaderFile = "Private/DTrackInputPrivatePCH.h";
+			PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+
 			PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{

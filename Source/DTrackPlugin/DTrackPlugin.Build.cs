@@ -32,11 +32,6 @@ namespace UnrealBuildTool.Rules
 
 	public class DTrackPlugin : ModuleRules
 	{   
-        private string ThirdPartyPath
-        {
-            get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../ThirdParty/")); }
-        }
-
 		public DTrackPlugin(ReadOnlyTargetRules Target) : base(Target)
 		{
 			bPrecompile = true;
@@ -46,7 +41,6 @@ namespace UnrealBuildTool.Rules
 			PrivateIncludePaths.AddRange(
 				new string[] {
 					"DTrackPlugin/Private",
-                    Path.Combine(ThirdPartyPath, "DTrackSDK", "Include"),
 					// ... add other private include paths required here ...
 				}
 				);
@@ -74,30 +68,7 @@ namespace UnrealBuildTool.Rules
 				}
 				);
 
-            LoadDTrackLib(Target);
 		}
-
-        public bool LoadDTrackLib(ReadOnlyTargetRules Target)
-        {
-            bool isLibrarySupported = false;
-
-            if ((Target.Platform == UnrealTargetPlatform.Win64)) // only 64bit is supported
-            {
-                isLibrarySupported = true;
-                
-                string LibrariesPath = Path.Combine(ThirdPartyPath, "DTrackSDK", "Lib");
-
-                PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, "DTrackSDK.lib"));          
-            }
-
-            if (isLibrarySupported)
-            {
-                // Include path
-                PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "DTrackSDK", "Include"));
-            }
-
-            return isLibrarySupported;
-        }
 
         private void Trace(string msg)
         {
