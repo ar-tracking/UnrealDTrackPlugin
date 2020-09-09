@@ -50,6 +50,7 @@ namespace UnrealBuildTool.Rules
 					"CoreUObject",
 					"InputDevice",
 					"LiveLinkInterface",
+					"InputCore"
 				}
 			);
 		}

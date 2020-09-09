@@ -46,9 +46,10 @@
 #include <cstdlib>
 #include <clocale>
 
-// use Visual Studio specific method to avoid warnings
-#if defined(_WIN32) || defined(WIN32) || defined(_WIN64)
-	#define strdup _strdup
+#if defined( _MSC_VER )
+	#define strdup _strdup  // use Visual Studio specific method to avoid warnings
+#else
+	#define strcpy_s( a, b, c )  strcpy( a, c )  // map 'strcpy_s' if not Visual Studio
 #endif
 
 using namespace DTrackNet;
@@ -74,9 +75,9 @@ DTrackSDK::DTrackSDK( const std::string& connection )
 		portstream.str( connection );
 	}
 
-	int port;
+	unsigned short port;
 	portstream >> port;  // data port
-	if ( portstream.fail() || port < 0 || port >= 65536 )  return;  // invalid port number
+	if ( portstream.fail() )  return;  // invalid port number
 
 	if ( host.empty() )
 	{
@@ -148,9 +149,9 @@ void DTrackSDK::init( const std::string& server_host, unsigned short server_port
                       RemoteSystemType remote_type )
 {
 	setlocale( LC_NUMERIC, "C" );
-	
+
 	rsType = remote_type;
-	
+
 	d_udp = NULL;
 	d_tcp = NULL;
 	d_udpbuf = NULL;
@@ -376,8 +377,10 @@ bool DTrackSDK::receive()
 	do {
 		if (!parseLine(&s))
 			return false;
-	} while( (s = string_nextline(d_udpbuf, s, d_udpbufsize)) != 0 );
-	
+
+		s = string_nextline( d_udpbuf, s, d_udpbufsize );
+	} while ( s != NULL );
+
 	endFrame();
 	
 	lastDataError = ERR_NONE;
@@ -407,8 +410,7 @@ bool DTrackSDK::processPacket( const std::string& data )
 
 	sBuf = (char *)malloc( data.length() + 1 );
 	if ( sBuf == NULL )  return false;
-	
-	//strcpy( sBuf, data.c_str() );
+
 	strcpy_s( sBuf, data.length() + 1, data.c_str() );
 
 	s = sBuf;
@@ -420,7 +422,7 @@ bool DTrackSDK::processPacket( const std::string& data )
 		if (!parseLine(&s))
 			return false;
 
-		s = string_nextline( sBuf, s, data.length() );
+		s = string_nextline( sBuf, s, static_cast< int >( data.length() ) );
 	} while( s != NULL );
 
 	endFrame();
@@ -580,7 +582,7 @@ int DTrackSDK::sendDTrack2Command(const std::string& command, std::string* answe
 	setLastDTrackError();
 
 	// command too long?
-	if ( command.length() > DTRACK2_PROT_MAXLEN )
+	if ( static_cast< int >( command.length() ) > DTRACK2_PROT_MAXLEN )
 	{
 		lastServerError = ERR_NET;
 		return -3;
@@ -632,17 +634,21 @@ int DTrackSDK::sendDTrack2Command(const std::string& command, std::string* answe
 	if (0 == strncmp(ans, "dtrack2 err ", 12)) {
 		char *s = ans + 12;
 		int i;
-		
+
 		// parse error code
-		if ( (s = string_get_i((char *)s, &i)) == 0 ) {
+		s = string_get_i( (char *)s, &i );
+		if ( s == NULL )
+		{
 			setLastDTrackError(-1100, "SDK error -1100");
 			lastServerError = ERR_PARSE;
 			return -1100;
 		}
 		lastDTrackError = i;
-		
+
 		// parse error string
-		if ( (s = string_get_quoted_text((char *)s, lastDTrackErrorString)) == 0 ) {
+		s = string_get_quoted_text( (char *)s, lastDTrackErrorString );
+		if ( s == NULL )
+		{
 			setLastDTrackError(-1100, "SDK error -1100");
 			lastServerError = ERR_PARSE;
 			return -1101;
@@ -706,12 +712,15 @@ bool DTrackSDK::getParam(const std::string& parameter, std::string& value)
 	if (0 == strncmp(res.c_str(), "dtrack2 set ", 12)) {
 		char *str = strdup(res.c_str() + 12);
 		char *s = str;
-		if ( (s = string_cmp_parameter(s, parameter.c_str())) == 0 ) {
+
+		s = string_cmp_parameter( s, parameter.c_str() );
+		if ( s == NULL )
+		{
 			free(str);
 			lastServerError = ERR_PARSE;
 			return false;
 		}
-		
+
 		// assign result
 		value = s;
 		free(str);
@@ -747,28 +756,35 @@ bool DTrackSDK::getMessage()
 	// parse message
 	const char* s = res.c_str() + 12;
 	// get 'origin'
-	if ( (s = string_get_word((char *)s, d_message_origin)) == 0 )
+	s = string_get_word( (char *)s, d_message_origin );
+	if ( s == NULL )
 		return false;
-	
+
 	// get 'status'
-	if ( (s = string_get_word((char *)s, d_message_status)) == 0 )
+	s = string_get_word( (char *)s, d_message_status );
+	if ( s == NULL )
 		return false;
-	
+
 	unsigned int ui;
 	// get 'frame counter'
-	if ( (s = string_get_ui((char *)s, &ui)) == 0 )
+	s = string_get_ui( (char *)s, &ui );
+	if ( s == NULL )
 		return false;
+
 	d_message_framenr = ui;
-	
+
 	// get 'error id'
-	if ( (s = string_get_ui((char *)s, &ui)) == 0 )
+	s = string_get_ui( (char *)s, &ui );
+	if ( s == NULL )
 		return false;
+
 	d_message_errorid = ui;
-	
+
 	// get 'message'
-	if ( (s = string_get_quoted_text((char *)s, d_message_msg)) == 0 )
+	s = string_get_quoted_text( (char *)s, d_message_msg );
+	if ( s == NULL )
 		return false;
-	
+
 	return true;
 }
 

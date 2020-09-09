@@ -80,7 +80,7 @@ public:
 
 	static const int DTRACK2_PROT_MAXLEN = 200;  //!< max. length of 'dtrack2' command
 
-	//! Compatibility modes for older SDKs
+	//! Compatibility modes for older DTrack systems
 	typedef enum {
 		SYS_DTRACK_UNKNOWN = 0,  //!< Unknown system
 		SYS_DTRACK,              //!< DTrack1 system
@@ -96,7 +96,7 @@ public:
 	} Errors;
 
 	/**
-	 * \brief Universal constructor. Can be used for any mode.
+	 * \brief Universal constructor. Can be used for any mode. Recommended for new applications.
 	 *
 	 * Refer to other constructors for details. Communicating mode just for DTrack2/DTrack3.
 	 *
@@ -450,7 +450,9 @@ public:
 
 	/**
 	 * \brief Send tactile command to set feedback on a specific finger of a specific hand.
-	 * 
+	 *
+	 * Has to be repeated at least every second; otherwise a timeout mechanism will turn off any feedback.
+	 *
 	 * @param[in] handId   Hand id, range 0 ..
 	 * @param[in] fingerId Finger id, range 0 ..
 	 * @param[in] strength Strength of feedback, between 0.0 and 1.0
@@ -460,7 +462,9 @@ public:
 
 	/**
 	 * \brief Send tactile command to set tactile feedback on all fingers of a specific hand.
-	 * 
+	 *
+	 * Has to be repeated at least every second; otherwise a timeout mechanism will turn off any feedback.
+	 *
 	 * @param[in] handId   Hand id, range 0 ..
 	 * @param[in] strength Strength of feedback on all fingers, between 0.0 and 1.0
 	 * @return             Success? (if not, a DTrack error message is available)
@@ -469,7 +473,7 @@ public:
 
 	/**
 	 * \brief Send tactile command to turn off tactile feedback on all fingers of a specific hand.
-	 * 
+	 *
 	 * @param[in] handId    Hand id, range 0 ..
 	 * @param[in] numFinger Number of fingers
 	 * @return              Success? (if not, a DTrack error message is available)
@@ -477,7 +481,7 @@ public:
 	bool tactileHandOff( int handId, int numFinger );
 
 
-protected:
+private:
 
 	static const unsigned short DTRACK2_PORT_COMMAND = 50105;  //!< Controller port number (TCP) for 'dtrack2' commands
 	static const unsigned short DTRACK2_PORT_TACTILE = 50110;  //!< Controller port number (UDP) for 'tfb' tactile commands
@@ -512,10 +516,10 @@ protected:
 	int lastDTrackError;                //!< last DTrack error: as code
 	std::string lastDTrackErrorString;  //!< last DTrack error: as string
 
-	DTrackNet::TCP* d_tcp;              //!< socket number for TCP
+	DTrackNet::TCP* d_tcp;              //!< socket for TCP
 	int d_tcptimeout_us;                //!< timeout for receiving and sending TCP data
 
-	DTrackNet::UDP* d_udp;              //!< socket number for UDP
+	DTrackNet::UDP* d_udp;              //!< socket for UDP
 	unsigned int d_remote_ip;           //!< IP address for remote access
 	unsigned short d_remoteport;        //!< port number for UDP (remote) / TCP
 	int d_udptimeout_us;                //!< timeout for receiving UDP data

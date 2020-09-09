@@ -115,7 +115,7 @@ public:
 	 * Refers to last received frame.
 	 *
 	 * @param[in] id Id, range 0 ..
-	 * @return       Id-th standard body data
+	 * @return       Id-th standard body data; NULL in case of error
 	 */
 	const DTrackBody* getBody( int id ) const;
 
@@ -134,7 +134,7 @@ public:
 	 * Refers to last received frame.
 	 *
 	 * @param[in] id Id, range 0 ..
-	 * @return       Id-th Flystick data
+	 * @return       Id-th Flystick data; NULL in case of error
 	 */
 	const DTrackFlyStick* getFlyStick( int id ) const;
 
@@ -153,7 +153,7 @@ public:
 	 * Refers to last received frame.
 	 *
 	 * @param[in] id Id, range 0 ..
-	 * @return       Id-th Measurement Tool data
+	 * @return       Id-th Measurement Tool data; NULL in case of error
 	 */
 	const DTrackMeaTool* getMeaTool( int id ) const;
 
@@ -172,7 +172,7 @@ public:
 	 * Refers to last received frame.
 	 *
 	 * @param[in] id Id, range 0 ..
-	 * @return       Id-th Measurement Tool reference data
+	 * @return       Id-th Measurement Tool reference data; NULL in case of error
 	 */
 	const DTrackMeaRef* getMeaRef( int id ) const;
 
@@ -191,7 +191,7 @@ public:
 	 * Refers to last received frame.
 	 *
 	 * @param[in] id Id, range 0 ..
-	 * @return       Id-th A.R.T. FINGERTRACKING hand data
+	 * @return       Id-th A.R.T. FINGERTRACKING hand data; NULL in case of error
 	 */
 	const DTrackHand* getHand( int id ) const;
 
@@ -210,7 +210,7 @@ public:
 	 * Refers to last received frame.
 	 *
 	 * @param[in] id Id, range 0 ..
-	 * @return       Id-th ART-Human model data
+	 * @return       Id-th ART-Human model data; NULL in case of error
 	 */
 	const DTrackHuman* getHuman( int id ) const;
 
@@ -229,7 +229,7 @@ public:
 	 * Refers to last received frame.
 	 *
 	 * @param[in] id Id, range 0 ..
-	 * @return       Id-th inertial body data
+	 * @return       Id-th inertial body data; NULL in case of error
 	 */
 	const DTrackInertial* getInertial( int id ) const;
 
@@ -248,7 +248,7 @@ public:
 	 * Refers to last received frame.
 	 *
 	 * @param[in] index Index, range 0 ..
-	 * @return          I-th single marker data
+	 * @return          I-th single marker data; NULL in case of error
 	 */
 	const DTrackMarker* getMarker( int index ) const;
 

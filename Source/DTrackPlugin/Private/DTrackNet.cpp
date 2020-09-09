@@ -103,29 +103,29 @@ void net_exit(void)
 
 
 /*
- *Convert string to IP address.
+ * Convert string to IP address (IPv4 only).
  */
-unsigned int ip_name2ip(const char* name)
+unsigned int ip_name2ip( const char* name )
 {
-	unsigned int ip;
-	struct addrinfo hints, *servinfo;
-	struct sockaddr_in *resulting_ipaddr;
-	// try if string contains IP address:
-	if (inet_pton(AF_UNSPEC, name, &ip) == 1)
-	{
-		return ntohl(ip);
-	}
-	// try if string contains hostname:
-	memset(&hints, 0, sizeof(hints));
-	hints.ai_flags = AI_CANONNAME;
-	hints.ai_family = AF_UNSPEC;
+	int err;
+	struct addrinfo hints, *res;
+
+	memset( &hints, 0, sizeof( hints ) );
+	hints.ai_family = AF_INET;  // only IPv4 supported
 	hints.ai_socktype = SOCK_STREAM;
-	if (getaddrinfo(name, NULL, &hints, &servinfo) != 0)
-	{
+
+	res = NULL;
+	err = getaddrinfo( name, NULL, &hints, &res );
+	if ( err != 0 || res == NULL )
 		return 0;
-	}
-	resulting_ipaddr = (struct sockaddr_in*)servinfo->ai_addr;
-	return ntohl(((struct in_addr)(resulting_ipaddr->sin_addr)).s_addr);
+
+	unsigned int ip;
+	struct sockaddr_in sin;
+	memcpy( &sin, res->ai_addr, sizeof( sin ) );  // casting is causing warnings (-Wcast-align) by some compilers
+	ip = ntohl( ( (struct in_addr )( sin.sin_addr ) ).s_addr );
+
+	freeaddrinfo( res );
+	return ip;
 }
 
 
@@ -268,7 +268,7 @@ unsigned short UDP::getPort()
  */
 int UDP::receive( void *buffer, int maxLen, int toutUs )
 {
-	int nbytes, err;
+	int err;
 	fd_set set;
 	struct timeval tout;
 
@@ -292,7 +292,7 @@ int UDP::receive( void *buffer, int maxLen, int toutUs )
 	// receiving packet:
 	while ( true )
 	{	// receive one packet:
-		nbytes = recv( m_socket->ossock, (char *)buffer, maxLen, 0 );
+		int nbytes = static_cast< int >( recv( m_socket->ossock, (char *)buffer, maxLen, 0 ) );
 		if (nbytes < 0)
 		{	// receive error
 			return -3;
@@ -323,7 +323,7 @@ int UDP::send( const void* buffer, int len, unsigned int ip, unsigned short port
 {
 	fd_set set;
 	struct timeval tout;
-	int nbytes, err;
+	int err;
 	struct sockaddr_in addr;
 
 	// building address:
@@ -349,8 +349,8 @@ int UDP::send( const void* buffer, int len, unsigned int ip, unsigned short port
 	}
 
 	// sending data:
-	nbytes = sendto( m_socket->ossock, (const char* )buffer, len, 0, (struct sockaddr* )&addr,
-	                (size_t )sizeof( struct sockaddr_in ) );
+	int nbytes = static_cast< int >( sendto( m_socket->ossock, (const char* )buffer, len, 0, (struct sockaddr* )&addr,
+	                                         (size_t )sizeof( struct sockaddr_in ) ) );
 	if(nbytes < len)
 	{	// send error
 		return -3;
@@ -435,7 +435,7 @@ bool TCP::isValid()
  */
 int TCP::receive( void *buffer, int maxLen, int toutUs )
 {
-	int nbytes, err;
+	int err;
 	fd_set set;
 	struct timeval tout;
 
@@ -457,7 +457,7 @@ int TCP::receive( void *buffer, int maxLen, int toutUs )
 	}
 
 	// receiving packet:
-	nbytes = recv( m_socket->ossock, (char *)buffer, maxLen, 0 );
+	int nbytes = static_cast< int >( recv( m_socket->ossock, (char *)buffer, maxLen, 0 ) );
 	if (nbytes == 0)
 	{	// broken connection
 		return -9;
@@ -481,7 +481,7 @@ int TCP::send( const void* buffer, int len, int toutUs )
 {
 	fd_set set;
 	struct timeval tout;
-	int nbytes, err;
+	int err;
 
 	// waiting to send data:
 	FD_ZERO(&set);
@@ -501,7 +501,7 @@ int TCP::send( const void* buffer, int len, int toutUs )
 	}
 
 	// sending data:
-	nbytes = sendto( m_socket->ossock, (const char* )buffer, len, 0, NULL, 0 );
+	int nbytes = static_cast< int >( sendto( m_socket->ossock, (const char* )buffer, len, 0, NULL, 0 ) );
 	if (nbytes < len)
 	{	// send error
 		return -3;

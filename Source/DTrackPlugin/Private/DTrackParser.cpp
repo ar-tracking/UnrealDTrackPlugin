@@ -39,13 +39,12 @@
 
 #include <cstring>
 
-using namespace DTrackSDK_Parse;
-
-// use Visual Studio specific secure methods to avoid warnings
-#if defined(_WIN32) || defined(WIN32) || defined(_WIN64)
-	#define strcpy strcpy_s
-	#define strcat strcat_s
+#if ! defined( _MSC_VER )
+	#define strcpy_s( a, b, c )  strcpy( a, c )  // map 'strcpy_s' if not Visual Studio
+	#define strcat_s( a, b, c )  strcat( a, c )  // map 'strcat_s' if not Visual Studio
 #endif
+
+using namespace DTrackSDK_Parse;
 
 
 /** Converts a stacked reduced (non-redundant) representation of a covariance matrix to a stacked full representation */
@@ -240,7 +239,9 @@ bool DTrackParser::parseLine(char **line)
  */
 bool DTrackParser::parseLine_fr(char **line)
 {
-	if ( (*line = string_get_ui(*line, &act_framecounter)) == 0 ) {
+	*line = string_get_ui( *line, &act_framecounter );
+	if ( *line == NULL )
+	{
 		act_framecounter = 0;
 		return false;
 	}
@@ -254,7 +255,9 @@ bool DTrackParser::parseLine_fr(char **line)
  */
 bool DTrackParser::parseLine_ts(char **line)
 {
-	if ( (*line = string_get_d(*line, &act_timestamp)) == 0 )	{
+	*line = string_get_d( *line, &act_timestamp );
+	if ( *line == NULL )
+	{
 		act_timestamp = -1;
 		return false;
 	}
@@ -268,9 +271,9 @@ bool DTrackParser::parseLine_ts(char **line)
  */
 bool DTrackParser::parseLine_6dcal(char **line)
 {
-	if ( (*line = string_get_i(*line, &loc_num_bodycal)) == 0 ) {
+	*line = string_get_i( *line, &loc_num_bodycal );
+	if ( *line == 0 )
 		return false;
-	}
 	
 	return true;
 }
@@ -290,15 +293,18 @@ bool DTrackParser::parseLine_6d(char **line)
 		act_body[i].id = i;
 		act_body[i].quality = -1;
 	}
+
 	// get number of standard bodies (in line)
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	// get data of standard bodies
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "id", &id, NULL, &d)) == 0 ) {
+		*line = string_get_block( *line, "id", &id, NULL, &d );
+		if ( *line == NULL )
 			return false;
-		}
+
 		// adjust length of vector
 		if (id >= act_num_body) {
 			act_body.resize(id + 1);
@@ -311,12 +317,14 @@ bool DTrackParser::parseLine_6d(char **line)
 		}
 		act_body[id].id = id;
 		act_body[id].quality = d;
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_body[id].loc)) == 0 ) {
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_body[ id ].loc );
+		if ( *line == NULL )
 			return false;
-		}
-		if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_body[id].rot)) == 0 ) {
+
+		*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_body[ id ].rot );
+		if ( *line == NULL )
 			return false;
-		}
 	}
 	return true;
 }
@@ -327,26 +335,29 @@ bool DTrackParser::parseLine_6d(char **line)
  */
 bool DTrackParser::parseLine_6dcov(char **line)
 {
-	int i, n, id;
-	double covref[3];
+	int n, id;
 	double cov_reduced[21];
 
 	// get number of standard bodies (in line)
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
 
 	// get covariance data
-	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "iddd", &id, NULL, covref)) == 0 ) {
+	for ( int i = 0; i < n; i++ )
+	{
+		double covref[ 3 ];
+		*line = string_get_block( *line, "iddd", &id, NULL, covref );
+		if ( *line == NULL )
 			return false;
-		}
-        for (int r=0; r<3; ++r) {
-            act_body[id].covref[r]  = covref[r];
-        }
-		if ( (*line = string_get_block(*line, "ddddddddddddddddddddd", NULL, NULL, cov_reduced)) == 0 ) {
+
+		for ( int j = 0; j < 3; j++ )
+			act_body[ id ].covref[ j ] = covref[ j ];
+
+		*line = string_get_block( *line, "ddddddddddddddddddddd", NULL, NULL, cov_reduced );
+		if ( *line == NULL )
 			return false;
-		}
+
 		reduced_to_full_cov( act_body[id].cov, cov_reduced, 6 );
 	}
 	return true;
@@ -362,9 +373,10 @@ bool DTrackParser::parseLine_6df(char **line)
 	double d;
 	
 	// get number of calibrated Flysticks
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	loc_num_flystick1 = n;
 	// adjust length of vector
 	if (n != act_num_flystick) {
@@ -373,9 +385,10 @@ bool DTrackParser::parseLine_6df(char **line)
 	}
 	// get data of Flysticks
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "idi", iarr, NULL, &d)) == 0 ) {
+		*line = string_get_block( *line, "idi", iarr, NULL, &d );
+		if ( *line == NULL )
 			return false;
-		}
+
 		if (iarr[0] != i) {	// not expected
 			return false;
 		}
@@ -403,14 +416,16 @@ bool DTrackParser::parseLine_6df(char **line)
 		}else{
 			act_flystick[i].joystick[1] = 0;
 		}
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_flystick[i].loc)) == 0 ) {
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_flystick[ i ].loc );
+		if ( *line == NULL )
 			return false;
-		}
-		if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_flystick[i].rot)) == 0 ) {
+
+		*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_flystick[ i ].rot );
+		if ( *line == NULL )
 			return false;
-		}
 	}
-	
+
 	return true;
 }
 
@@ -425,23 +440,27 @@ bool DTrackParser::parseLine_6df2(char **line)
 	char sfmt[20];
 	
 	// get number of calibrated Flysticks
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	// adjust length of vector
 	if (n != act_num_flystick) {
 		act_flystick.resize(n);
 		act_num_flystick = n;
 	}
+
 	// get number of Flysticks
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	// get data of Flysticks
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "idii", iarr, NULL, &d)) == 0 ) {
+		*line = string_get_block( *line, "idii", iarr, NULL, &d );
+		if ( *line == NULL )
 			return false;
-		}
+
 		if (iarr[0] != i) {  // not expected
 			return false;
 		}
@@ -453,26 +472,33 @@ bool DTrackParser::parseLine_6df2(char **line)
 		}
 		act_flystick[i].num_button = iarr[1];
 		act_flystick[i].num_joystick = iarr[2];
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_flystick[i].loc)) == 0 ){
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_flystick[ i ].loc );
+		if ( *line == NULL )
 			return false;
-		}
-		if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_flystick[i].rot)) == 0 ){
+
+		*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_flystick[ i ].rot );
+		if ( *line == NULL )
 			return false;
-		}
-		strcpy(sfmt, "");
+
+		strcpy_s( sfmt, sizeof( sfmt ), "" );
 		j = 0;
-		while (j < act_flystick[i].num_button) {
-			strcat(sfmt, "i");
+		while ( j < act_flystick[ i ].num_button )
+		{
+			strcat_s( sfmt, sizeof( sfmt ), "i" );
 			j += 32;
 		}
 		j = 0;
-		while (j < act_flystick[i].num_joystick) {
-			strcat(sfmt, "d");
+		while ( j < act_flystick[ i ].num_joystick )
+		{
+			strcat_s( sfmt, sizeof( sfmt ), "d" );
 			j++;
 		}
-		if ( (*line = string_get_block(*line, sfmt, iarr, NULL, act_flystick[i].joystick)) == 0 ) {
+
+		*line = string_get_block( *line, sfmt, iarr, NULL, act_flystick[ i ].joystick );
+		if ( *line == NULL )
 			return false;
-		}
+
 		k = l = 0;
 		for (j=0; j<act_flystick[i].num_button; j++) {
 			act_flystick[i].button[j] = iarr[k] & 0x01;
@@ -498,9 +524,10 @@ bool DTrackParser::parseLine_6dmt(char **line)
 	double d;
 	
 	// get number of calibrated measurement tools
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	loc_num_meatool1 = n;
 	// adjust length of vector
 	if (n != act_num_meatool) {
@@ -509,9 +536,10 @@ bool DTrackParser::parseLine_6dmt(char **line)
 	}
 	// get data of measurement tools
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "idi", iarr, NULL, &d)) == 0 ) {
+		*line = string_get_block( *line, "idi", iarr, NULL, &d );
+		if ( *line == NULL )
 			return false;
-		}
+
 		if (iarr[0] != i) {  // not expected
 			return false;
 		}
@@ -530,14 +558,15 @@ bool DTrackParser::parseLine_6dmt(char **line)
 		}
 		
 		act_meatool[i].tipradius = 0.0;
-		
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_meatool[i].loc)) == 0 ) {
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_meatool[ i ].loc );
+		if ( *line == NULL )
 			return false;
-		}
-		if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_meatool[i].rot)) == 0 ) {
+
+		*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_meatool[ i ].rot );
+		if ( *line == NULL )
 			return false;
-		}
-		
+
 		for (j=0; j<9; j++)
 			act_meatool[i].cov[j] = 0.0;
 	}
@@ -555,14 +584,16 @@ bool DTrackParser::parseLine_6dmt2(char **line)
 	double darr[2];
 	char sfmt[20];
 	double cov_reduced[6];
-	
+
 	// get number of calibrated measurement tools
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	// adjust length of vector
 	if (n != act_num_meatool) {
 		act_meatool.resize(n);
@@ -570,9 +601,10 @@ bool DTrackParser::parseLine_6dmt2(char **line)
 	}
 	// get data of measurement tools
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "idid", iarr, NULL, darr)) == 0 ) {
+		*line = string_get_block( *line, "idid", iarr, NULL, darr );
+		if ( *line == NULL )
 			return false;
-		}
+
 		if (iarr[0] != i) {  // not expected
 			return false;
 		}
@@ -588,24 +620,27 @@ bool DTrackParser::parseLine_6dmt2(char **line)
 		}
 		
 		act_meatool[i].tipradius = darr[1];
-		
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_meatool[i].loc)) == 0 ) {
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_meatool[ i ].loc );
+		if ( *line == NULL )
 			return false;
-		}
-		if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_meatool[i].rot)) == 0 ) {
+
+		*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_meatool[ i ].rot );
+		if ( *line == NULL )
 			return false;
-		}
-		
-		strcpy(sfmt, "");
+
+		strcpy_s( sfmt, sizeof( sfmt ), "" );
 		j = 0;
-		while (j < act_meatool[i].num_button) {
-			strcat(sfmt, "i");
+		while ( j < act_meatool[ i ].num_button )
+		{
+			strcat_s( sfmt, sizeof( sfmt ), "i" );
 			j += 32;
 		}
-		
-		if ( (*line = string_get_block(*line, sfmt, iarr, NULL, NULL)) == 0 ) {
+
+		*line = string_get_block( *line, sfmt, iarr, NULL, NULL );
+		if ( *line == NULL )
 			return false;
-		}
+
 		k = l = 0;
 		for (j=0; j<act_meatool[i].num_button; j++) {
 			act_meatool[i].button[j] = iarr[k] & 0x01;
@@ -616,10 +651,11 @@ bool DTrackParser::parseLine_6dmt2(char **line)
 				l = 0;
 			}
 		}
-		
-		if ( (*line = string_get_block(*line, "dddddd", NULL, NULL, cov_reduced)) == 0 ) {
+
+		*line = string_get_block( *line, "dddddd", NULL, NULL, cov_reduced );
+		if ( *line == NULL )
 			return false;
-		}
+
 		reduced_to_full_cov( act_meatool[i].cov, cov_reduced, 3 );
 	}
 	
@@ -636,10 +672,10 @@ bool DTrackParser::parseLine_6dmtr(char **line)
 	double d;
 	
 	// get number of measurement references
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
-	
+
 	// adjust length of vector
 	if (n != act_num_mearef) {
 		act_mearef.resize(n);
@@ -652,30 +688,32 @@ bool DTrackParser::parseLine_6dmtr(char **line)
 		act_mearef[i].id = i;
 		act_mearef[i].quality = -1;
 	}
-	
+
 	// get number of calibrated measurement references
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
-	
+
 	// get data of measurement references
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "id", &id, NULL, &d)) == 0 ) {
+		*line = string_get_block( *line, "id", &id, NULL, &d );
+		if ( *line == NULL )
 			return false;
-		}
+
 		if (id < 0 || id >= (int)act_mearef.size()) {
 			return false;
 		}
 		act_mearef[id].quality = d;
-		
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_mearef[id].loc)) == 0 ) {
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_mearef[ id ].loc );
+		if ( *line == NULL )
 			return false;
-		}
-		if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_mearef[id].rot)) == 0 ) {
+
+		*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_mearef[ id ].rot );
+		if ( *line == NULL )
 			return false;
-		}
 	}
-	
+
 	return true;
 }
 
@@ -685,10 +723,10 @@ bool DTrackParser::parseLine_6dmtr(char **line)
  */
 bool DTrackParser::parseLine_glcal(char **line)
 {
-	if ( (*line = string_get_i(*line, &loc_num_handcal)) == 0 ) {	// get number of calibrated hands
+	*line = string_get_i( *line, &loc_num_handcal );  // get number of calibrated hands
+	if ( *line == NULL )
 		return false;
-	}
-	
+
 	return true;
 }
 
@@ -707,15 +745,18 @@ bool DTrackParser::parseLine_gl(char **line)
 		act_hand[i].id = i;
 		act_hand[i].quality = -1;
 	}
+
 	// get number of hands (in line)
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	// get data of hands
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "idii", iarr, NULL, &d)) == 0 ){
+		*line = string_get_block( *line, "idii", iarr, NULL, &d );
+		if ( *line == NULL )
 			return false;
-		}
+
 		id = iarr[0];
 		if (id >= act_num_hand) {  // adjust length of vector
 			act_hand.resize(id + 1);
@@ -733,24 +774,29 @@ bool DTrackParser::parseLine_gl(char **line)
 			return false;
 		}
 		act_hand[id].nfinger = iarr[2];
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_hand[id].loc)) == 0 ) {
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_hand[ id ].loc );
+		if ( *line == NULL )
 			return false;
-			
-		}
-		if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_hand[id].rot)) == 0 ){
+
+		*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_hand[ id ].rot );
+		if ( *line == NULL )
 			return false;
-		}
+
 		// get data of fingers
 		for (j = 0; j < act_hand[id].nfinger; j++) {
-			if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_hand[id].finger[j].loc)) == 0 ) {
+			*line = string_get_block( *line, "ddd", NULL, NULL, act_hand[ id ].finger[ j ].loc );
+			if ( *line == NULL )
 				return false;
-			}
-			if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_hand[id].finger[j].rot)) == 0 ){
+
+			*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_hand[ id ].finger[ j ].rot );
+			if ( *line == NULL )
 				return false;
-			}
-			if ( (*line = string_get_block(*line, "dddddd", NULL, NULL, darr)) == 0 ){
+
+			*line = string_get_block( *line, "dddddd", NULL, NULL, darr );
+			if ( *line == NULL )
 				return false;
-			}
+
 			act_hand[id].finger[j].radiustip = darr[0];
 			act_hand[id].finger[j].lengthphalanx[0] = darr[1];
 			act_hand[id].finger[j].anglephalanx[0] = darr[2];
@@ -771,11 +817,12 @@ bool DTrackParser::parseLine_6dj(char **line)
 {
 	int i, j, n, iarr[2], id;
 	double d, darr[6];
-	
+
 	// get number of calibrated human models
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	// adjust length of vector
 	if(n != act_num_human){
 		act_human.resize(n);
@@ -786,16 +833,18 @@ bool DTrackParser::parseLine_6dj(char **line)
 		act_human[i].id = i;
 		act_human[i].num_joints = 0;
 	}
-	
+
 	// get number of human models
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	int id_human;
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "ii", iarr, NULL,NULL)) == 0 ){
+		*line = string_get_block( *line, "ii", iarr, NULL,NULL );
+		if ( *line == NULL )
 			return false;
-		}
+
 		if (iarr[0] > act_num_human - 1) // not expected
 			return false;
 		
@@ -804,24 +853,26 @@ bool DTrackParser::parseLine_6dj(char **line)
 		act_human[id_human].num_joints = iarr[1];
 		
 		for (j = 0; j < iarr[1]; j++){
-			if ( (*line = string_get_block(*line, "id", &id, NULL, &d)) == 0 ){
+			*line = string_get_block( *line, "id", &id, NULL, &d );
+			if ( *line == NULL )
 				return false;
-			}
+
 			act_human[id_human].joint[j].id = id;
 			act_human[id_human].joint[j].quality = d;
-			
-			if ( (*line = string_get_block(*line, "dddddd", NULL, NULL, darr)) == 0 ){
+
+			*line = string_get_block( *line, "dddddd", NULL, NULL, darr );
+			if ( *line == NULL )
 				return false;
-			}
+
 			memcpy(act_human[id_human].joint[j].loc, &darr,  3*sizeof(double));
 			memcpy(act_human[id_human].joint[j].ang, &darr[3],  3*sizeof(double));
-			
-			if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_human[id_human].joint[j].rot)) == 0 ){
+
+			*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_human[ id_human ].joint[ j ].rot );
+			if ( *line == NULL )
 				return false;
-			}
 		}
 	}
-	
+
 	return true;
 }
 
@@ -841,15 +892,18 @@ bool DTrackParser::parseLine_6di(char **line)
 		act_inertial[i].st = 0;
 		act_inertial[i].error = 0;
 	}
+
 	// get number of calibrated inertial bodies
-	if ( (*line = string_get_i(*line, &n)) == 0 ) {
+	*line = string_get_i( *line, &n );
+	if ( *line == NULL )
 		return false;
-	}
+
 	// get data of inertial bodies
 	for (i=0; i<n; i++) {
-		if ( (*line = string_get_block(*line, "iid", iarr, NULL, &d)) == 0 ){
+		*line = string_get_block( *line, "iid", iarr, NULL, &d );
+		if ( *line == NULL )
 			return false;
-		}
+
 		id = iarr[0];
 		st = iarr[1];
 		// adjust length of vector
@@ -866,14 +920,16 @@ bool DTrackParser::parseLine_6di(char **line)
 		act_inertial[id].id = id;
 		act_inertial[id].st = st;
 		act_inertial[id].error = d;
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_inertial[id].loc)) == 0 ) {
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_inertial[ id ].loc );
+		if ( *line == NULL )
 			return false;
-		}
-		if ( (*line = string_get_block(*line, "ddddddddd", NULL, NULL, act_inertial[id].rot)) == 0 ) {
+
+		*line = string_get_block( *line, "ddddddddd", NULL, NULL, act_inertial[ id ].rot );
+		if ( *line == NULL )
 			return false;
-		}
 	}
-	
+
 	return true;
 }
 
@@ -884,25 +940,29 @@ bool DTrackParser::parseLine_6di(char **line)
 bool DTrackParser::parseLine_3d(char **line)
 {
 	int i;
-	
+
 	// get number of markers
-	if ( (*line = string_get_i(*line, &act_num_marker)) == 0 ) {
+	*line = string_get_i( *line, &act_num_marker );
+	if ( *line == NULL )
+	{
 		act_num_marker = 0;
 		return false;
 	}
 	if (act_num_marker > (int )act_marker.size()) {
 		act_marker.resize(act_num_marker);
 	}
+
 	// get data of single markers
 	for (i=0; i<act_num_marker; i++) {
-		if ( (*line = string_get_block(*line, "id", &act_marker[i].id, NULL, &act_marker[i].quality)) == 0 ) {
+		*line = string_get_block( *line, "id", &act_marker[ i ].id, NULL, &act_marker[ i ].quality );
+		if ( *line == NULL )
 			return false;
-		}
-		if ( (*line = string_get_block(*line, "ddd", NULL, NULL, act_marker[i].loc)) == 0 ) {
+
+		*line = string_get_block( *line, "ddd", NULL, NULL, act_marker[ i ].loc );
+		if ( *line == NULL )
 			return false;
-		}
 	}
-	
+
 	return true;
 }
 

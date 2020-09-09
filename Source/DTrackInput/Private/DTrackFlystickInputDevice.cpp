@@ -35,6 +35,7 @@
 #include "ILiveLinkClient.h"
 #include "GenericPlatform/GenericApplicationMessageHandler.h"
 
+#include "InputCoreTypes.h"
 
 
 FDTrackFlystickInputDevice::FDTrackFlystickInputDevice(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler) 
@@ -51,18 +52,18 @@ FDTrackFlystickInputDevice::FDTrackFlystickInputDevice(const TSharedRef< FGeneri
 		ModularFeatures.OnModularFeatureRegistered().AddRaw(this, &FDTrackFlystickInputDevice::on_modular_feature_registerd);
 	}
 
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_Trigger);
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_FaceButton1);
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_FaceButton2);
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_FaceButton3);
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_FaceButton4);
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_FaceButton5);
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_FaceButton6);
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_FaceButton7);
-	m_button_mapping.Add(FGamepadKeyNames::MotionController_Left_FaceButton8);
+	m_button_mapping.Add( EKeys::Gamepad_LeftTrigger.GetFName() );
+	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Bottom.GetFName() );
+	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Right.GetFName() );
+	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Left.GetFName() );
+	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Top.GetFName() );
+	m_button_mapping.Add( EKeys::Gamepad_DPad_Up.GetFName() );
+	m_button_mapping.Add( EKeys::Gamepad_DPad_Down.GetFName() );
+	m_button_mapping.Add( EKeys::Gamepad_DPad_Right.GetFName() );
+	m_button_mapping.Add( EKeys::Gamepad_DPad_Left.GetFName() );
 
-	m_joystick_mapping.Add(FGamepadKeyNames::MotionController_Left_Thumbstick_X);
-	m_joystick_mapping.Add(FGamepadKeyNames::MotionController_Left_Thumbstick_Y);
+	m_joystick_mapping.Add( EKeys::Gamepad_LeftX.GetFName() );
+	m_joystick_mapping.Add( EKeys::Gamepad_LeftY.GetFName() );
 }
 
 FDTrackFlystickInputDevice::~FDTrackFlystickInputDevice() {

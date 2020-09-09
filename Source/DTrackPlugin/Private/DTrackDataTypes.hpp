@@ -88,7 +88,7 @@ struct DTrackBody
 	 *
 	 * @return Is tracked?
 	 */
-	bool isTracked()
+	bool isTracked() const
 	{ return ( quality >= 0.0 ); }
 
 	/**
@@ -96,7 +96,7 @@ struct DTrackBody
 	 *
 	 * @return Quaternion
 	 */
-	DTrackQuaternion getQuaternion()
+	DTrackQuaternion getQuaternion() const
 	{ return rot2quat( rot ); }
 };
 
@@ -120,7 +120,7 @@ struct DTrackInertial
 	 *
 	 * @return Is tracked?
 	 */
-	bool isTracked()
+	bool isTracked() const
 	{ return ( st > 0 ); }
 
 	/**
@@ -128,7 +128,7 @@ struct DTrackInertial
 	 *
 	 * @return Quaternion
 	 */
-	DTrackQuaternion getQuaternion()
+	DTrackQuaternion getQuaternion() const
 	{ return rot2quat( rot ); }
 };
 
@@ -160,7 +160,7 @@ struct DTrackFlyStick
 	 *
 	 * @return Is tracked?
 	 */
-	bool isTracked()
+	bool isTracked() const
 	{ return ( quality >= 0.0 ); }
 
 	/**
@@ -168,7 +168,7 @@ struct DTrackFlyStick
 	 *
 	 * @return Quaternion
 	 */
-	DTrackQuaternion getQuaternion()
+	DTrackQuaternion getQuaternion() const
 	{ return rot2quat( rot ); }
 };
 
@@ -199,7 +199,7 @@ struct DTrackMeaTool
 	 *
 	 * @return Is tracked?
 	 */
-	bool isTracked()
+	bool isTracked() const
 	{ return ( quality >= 0.0 ); }
 
 	/**
@@ -207,7 +207,7 @@ struct DTrackMeaTool
 	 *
 	 * @return Quaternion
 	 */
-	DTrackQuaternion getQuaternion()
+	DTrackQuaternion getQuaternion() const
 	{ return rot2quat( rot ); }
 };
 
@@ -230,7 +230,7 @@ struct DTrackMeaRef
 	 *
 	 * @return Is tracked?
 	 */
-	bool isTracked()
+	bool isTracked() const
 	{ return ( quality >= 0.0 ); }
 
 	/**
@@ -238,7 +238,7 @@ struct DTrackMeaRef
 	 *
 	 * @return Quaternion
 	 */
-	DTrackQuaternion getQuaternion()
+	DTrackQuaternion getQuaternion() const
 	{ return rot2quat( rot ); }
 };
 
@@ -265,7 +265,7 @@ struct DTrackHand
 	 *
 	 * @return Is tracked?
 	 */
-	bool isTracked()
+	bool isTracked() const
 	{ return ( quality >= 0.0 ); }
 
 	/**
@@ -273,7 +273,7 @@ struct DTrackHand
 	 *
 	 * @return Quaternion
 	 */
-	DTrackQuaternion getQuaternion()
+	DTrackQuaternion getQuaternion() const
 	{ return rot2quat( rot ); }
 
 	/**
@@ -292,7 +292,7 @@ struct DTrackHand
 		 *
 		 * @return Quaternion
 		 */
-		DTrackQuaternion getQuaternion()
+		DTrackQuaternion getQuaternion() const
 		{ return rot2quat( rot ); }
 	} finger[ DTRACKSDK_HAND_MAX_FINGER ];  //!< Finger data (order: thumb, index finger, middle finger, ...)
 };
@@ -318,7 +318,7 @@ struct DTrackHuman
 	 *
 	 * @return Is tracked?
 	 */
-	bool isTracked()
+	bool isTracked() const
 	{ return ( num_joints > 0 ); }
 
 	/**
@@ -337,7 +337,7 @@ struct DTrackHuman
 		 *
 		 * @return Is tracked?
 		 */
-		bool isTracked()
+		bool isTracked() const
 		{ return ( quality >= 0.0 ); }
 
 		/**
@@ -345,7 +345,7 @@ struct DTrackHuman
 		 *
 		 * @return Quaternion
 		 */
-		DTrackQuaternion getQuaternion()
+		DTrackQuaternion getQuaternion() const
 		{ return rot2quat( rot ); }
 	} joint[ DTRACKSDK_HUMAN_MAX_JOINTS ];  //!< Joint data
 };
