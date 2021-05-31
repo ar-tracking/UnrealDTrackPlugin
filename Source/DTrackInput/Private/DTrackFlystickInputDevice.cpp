@@ -52,18 +52,18 @@ FDTrackFlystickInputDevice::FDTrackFlystickInputDevice(const TSharedRef< FGeneri
 		ModularFeatures.OnModularFeatureRegistered().AddRaw(this, &FDTrackFlystickInputDevice::on_modular_feature_registerd);
 	}
 
-	m_button_mapping.Add( EKeys::Gamepad_LeftTrigger.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Bottom.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Right.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Left.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Top.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_DPad_Up.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_DPad_Down.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_DPad_Right.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_DPad_Left.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickTrigger.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickButton1.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickButton2.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickButton3.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickButton4.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickButton5.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickButton6.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickButton7.GetFName() );
+	m_button_mapping.Add( FDTrackInputModule::FlystickButton8.GetFName() );
 
-	m_joystick_mapping.Add( EKeys::Gamepad_LeftX.GetFName() );
-	m_joystick_mapping.Add( EKeys::Gamepad_LeftY.GetFName() );
+	m_joystick_mapping.Add( FDTrackInputModule::FlystickThumbstickX.GetFName() );
+	m_joystick_mapping.Add( FDTrackInputModule::FlystickThumbstickY.GetFName() );
 }
 
 FDTrackFlystickInputDevice::~FDTrackFlystickInputDevice() {

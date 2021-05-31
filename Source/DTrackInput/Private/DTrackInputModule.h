@@ -28,6 +28,7 @@
 
 
 #include "IDTrackInputModule.h"
+#include "InputCoreTypes.h"
 
 class FDTrackFlystickInputDevice;
 class ILiveLinkClient;
@@ -42,7 +43,23 @@ DECLARE_LOG_CATEGORY_EXTERN(LogDTrackInput, Log, All);
 class FDTrackInputModule : public IDTrackInputModule
 {
 public:
-
+	
+	/* Category */
+	const FName FlystickKeyCategory = FName("ART_Flystick");
+	/* Keys */
+	static const FKey FlystickTrigger;
+	static const FKey FlystickButton1;
+	static const FKey FlystickButton2;
+	static const FKey FlystickButton3;
+	static const FKey FlystickButton4;
+	static const FKey FlystickButton5;
+	static const FKey FlystickButton6;
+	static const FKey FlystickButton7;
+	static const FKey FlystickButton8;
+	/* Axis */
+	static const FKey FlystickThumbstickX;
+	static const FKey FlystickThumbstickY;
+	
 	//~ Begin IInputDeviceModule implementation
 	virtual TSharedPtr< class IInputDevice > CreateInputDevice(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler) override;
 	//~ End IInputDeviceModule implementation

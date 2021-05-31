@@ -32,9 +32,35 @@
 
 DEFINE_LOG_CATEGORY(LogDTrackInput);
 
-
+/* Keys */
+const FKey FDTrackInputModule::FlystickTrigger = FKey("Flystick_Trigger");
+const FKey FDTrackInputModule::FlystickButton1 = FKey("Flystick_Button_1");
+const FKey FDTrackInputModule::FlystickButton2 = FKey("Flystick_Button_2");
+const FKey FDTrackInputModule::FlystickButton3 = FKey("Flystick_Button_3");
+const FKey FDTrackInputModule::FlystickButton4 = FKey("Flystick_Button_4");
+const FKey FDTrackInputModule::FlystickButton5 = FKey("Flystick_Button_5");
+const FKey FDTrackInputModule::FlystickButton6 = FKey("Flystick_Button_6");
+const FKey FDTrackInputModule::FlystickButton7 = FKey("Flystick_Button_7");
+const FKey FDTrackInputModule::FlystickButton8 = FKey("Flystick_Button_8");
+/* Axis */
+const FKey FDTrackInputModule::FlystickThumbstickX = FKey("Flystick_Thumbstick_X");
+const FKey FDTrackInputModule::FlystickThumbstickY = FKey("Flystick_Thumbstick_Y");
 
 TSharedPtr< class IInputDevice > FDTrackInputModule::CreateInputDevice(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler) {
+	EKeys::AddMenuCategoryDisplayInfo(FlystickKeyCategory, FText::AsCultureInvariant("A.R.T. Flystick"), TEXT("GraphEditor.PadEvent_16x"));
+	
+	EKeys::AddKey(FKeyDetails(FlystickTrigger, FText::AsCultureInvariant("Flystick Trigger"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickButton1, FText::AsCultureInvariant("Flystick Button 1"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickButton2, FText::AsCultureInvariant("Flystick Button 2"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickButton3, FText::AsCultureInvariant("Flystick Button 3"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickButton4, FText::AsCultureInvariant("Flystick Button 4"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickButton5, FText::AsCultureInvariant("Flystick Button 5"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickButton6, FText::AsCultureInvariant("Flystick Button 6"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickButton7, FText::AsCultureInvariant("Flystick Button 7"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickButton8, FText::AsCultureInvariant("Flystick Button 8"), FKeyDetails::GamepadKey, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickThumbstickX,  FText::AsCultureInvariant("Flystick Thumbstick X"), FKeyDetails::GamepadKey | FKeyDetails::Axis1D, FlystickKeyCategory));
+	EKeys::AddKey(FKeyDetails(FlystickThumbstickY,  FText::AsCultureInvariant("Flystick Thumbstick Y"), FKeyDetails::GamepadKey | FKeyDetails::Axis1D, FlystickKeyCategory));
+	
 	return TSharedPtr< class IInputDevice >(new FDTrackFlystickInputDevice(InMessageHandler));
 }
 
