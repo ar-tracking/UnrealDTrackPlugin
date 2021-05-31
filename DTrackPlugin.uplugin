@@ -17,12 +17,12 @@
 		{
 			"Name": "DTrackPlugin",
 			"Type": "Runtime",
-			"WhitelistPlatforms": [ "Win64" ]
+			"WhitelistPlatforms": [ "Win64" , "Linux" ]
 		},
 		{
 			"Name": "DTrackInput",
 			"Type": "Runtime",
-			"WhitelistPlatforms": [ "Win64" ]
+			"WhitelistPlatforms": [ "Win64" , "Linux" ]
 		}
 	],
 	"Plugins": [
