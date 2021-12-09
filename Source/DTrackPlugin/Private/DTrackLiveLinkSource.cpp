@@ -29,6 +29,7 @@
 #include "DTrackPlugin.h"
 #include "DTrackLiveLinkSourceSettings.h"
 #include "DTrackSDKHandler.h"
+#include "DTrackLiveLinkRole.h"
 #include "ILiveLinkClient.h"
 #include "Misc/App.h"
 #include "Roles/LiveLinkAnimationRole.h"
@@ -48,12 +49,15 @@ void FDTrackLiveLinkSource::ReceiveClient(ILiveLinkClient* InClient, FGuid InSou
 
 	m_client = InClient;
 	m_source_guid = InSourceGuid;
-	m_sdk_handler = MakeUnique<FDTrackSDKHandler>(this);
+	if (!m_sdk_handler.IsValid()) {
+		m_sdk_handler = MakeUnique<FDTrackSDKHandler>(this);
+	}
 }
 
 void FDTrackLiveLinkSource::InitializeSettings(ULiveLinkSourceSettings* InSettings) {
 
 	m_source_settings = CastChecked<UDTrackLiveLinkSourceSettings>(InSettings);
+	reset_datamaps();
 	m_sdk_handler->start_listening(m_source_settings->m_server_settings);
 }
 
@@ -290,6 +294,7 @@ void FDTrackLiveLinkSource::reset_datamaps() {
 bool FDTrackLiveLinkSource::RequestSourceShutdown() {
 
 	m_sdk_handler->Stop();
+	reset_datamaps();
 	return true;
 }
 

@@ -10,19 +10,18 @@
 	"DocsURL": "https://github.com/ar-tracking/UnrealDTrackPlugin",
 	"MarketplaceURL": "",
 	"SupportURL": "https://ar-tracking.com/",
-	"EngineVersion": "4.25.0",
 	"CanContainContent": false,
 	"Installed" : true,
 	"Modules": [
 		{
 			"Name": "DTrackPlugin",
 			"Type": "Runtime",
-			"WhitelistPlatforms": [ "Win64" ]
+			"WhitelistPlatforms": [ "Win64" , "Linux" ]
 		},
 		{
 			"Name": "DTrackInput",
 			"Type": "Runtime",
-			"WhitelistPlatforms": [ "Win64" ]
+			"WhitelistPlatforms": [ "Win64" , "Linux" ]
 		}
 	],
 	"Plugins": [
