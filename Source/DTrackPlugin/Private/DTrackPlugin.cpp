@@ -65,14 +65,9 @@ TSharedPtr<FDTrackLiveLinkSource> FDTrackPlugin::create_livelink_source() {
 	if (!m_livelink_source.IsValid()) {
 
 		m_livelink_source = MakeShared<FDTrackLiveLinkSource>();
-		return m_livelink_source;
-	}
-	else {
-
-		return m_livelink_source;
 	}
 
-	return nullptr;
+	return m_livelink_source;
 }
 
 void FDTrackPlugin::handle_app_pre_exit() {

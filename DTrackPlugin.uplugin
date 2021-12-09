@@ -10,7 +10,6 @@
 	"DocsURL": "https://github.com/ar-tracking/UnrealDTrackPlugin",
 	"MarketplaceURL": "",
 	"SupportURL": "https://ar-tracking.com/",
-	"EngineVersion": "4.25.0",
 	"CanContainContent": false,
 	"Installed" : true,
 	"Modules": [
