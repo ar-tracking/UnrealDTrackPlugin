@@ -67,6 +67,9 @@ public:
 	// Stops the server listening thread if any and stop measurements on the SDK
 	void stop_listening();
 
+	// Get the name for a specific body index
+	bool get_body_name(uint32 body_index, std::string body_name);
+
 public:
 
 	// Returns true if connection to server is active
