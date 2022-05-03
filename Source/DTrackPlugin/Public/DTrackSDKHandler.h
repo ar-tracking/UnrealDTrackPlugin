@@ -68,7 +68,7 @@ public:
 	void stop_listening();
 
 	// Get the name for a specific body index
-	bool get_body_name(uint32 body_index, std::string body_name);
+	bool get_body_name(uint32 body_index, std::string& body_name);
 
 public:
 

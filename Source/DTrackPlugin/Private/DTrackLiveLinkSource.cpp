@@ -125,11 +125,12 @@ void FDTrackLiveLinkSource::handle_body_data_anythread(double n_worldtime, doubl
 			std::string body_name = "";
 			if(m_sdk_handler->get_body_name(n_itemId, body_name))
 			{
+				body_name.erase(std::remove(body_name.begin(), body_name.end(), '\"'), body_name.end()); //Removing quotes
 				subject_name = UTF8_TO_TCHAR(body_name.c_str());
 			}
 			else
 			{
-				subject_name = FString::Printf(TEXT("DTrack-Body-%02d"), n_itemId);
+				subject_name = FString::Printf(TEXT("Unknown-DTrack-Body-%02d"), n_itemId);
 			}
 
 			//Body data always consists of Location and Rotation. No need to make verification to resend static data
