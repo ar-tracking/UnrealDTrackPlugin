@@ -130,7 +130,7 @@ void FDTrackLiveLinkSource::handle_body_data_anythread(double n_worldtime, doubl
 			}
 			else
 			{
-				subject_name = FString::Printf(TEXT("Unknown-DTrack-Body-%02d"), n_itemId);
+				subject_name = FString::Printf(TEXT("DTrack-Body-%02d"), n_itemId);
 			}
 
 			//Body data always consists of Location and Rotation. No need to make verification to resend static data

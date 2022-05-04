@@ -193,12 +193,12 @@ uint32 FDTrackSDKHandler::Run() {
 
 	m_is_connecting = true;
 
-	if (CopiedSettings.m_dtrack_start_mea) {
-		UE_LOG(LogDTrackPlugin, Verbose, TEXT("Connecting to DTrack2 server with IP '%s' on port '%d'."), *CopiedSettings.m_dtrack_server_ip, m_server_settings.m_dtrack_server_port);
+	if (!CopiedSettings.m_dtrack_server_ip.IsEmpty()) {
+		UE_LOG(LogDTrackPlugin, Verbose, TEXT("Connecting to DTrack2 server with IP '%s' and listening on port '%d'."), *CopiedSettings.m_dtrack_server_ip, m_server_settings.m_dtrack_server_port);
 		m_dtrack = MakeUnique<DTrackSDK>(TCHAR_TO_UTF8(*CopiedSettings.m_dtrack_server_ip), CopiedSettings.m_dtrack_server_port);
 	}
 	else {
-		UE_LOG(LogDTrackPlugin, Verbose, TEXT("Connecting to DTrack server on port '%d'."), CopiedSettings.m_dtrack_server_port);
+		UE_LOG(LogDTrackPlugin, Verbose, TEXT("Listening to DTrack on port '%d'."), CopiedSettings.m_dtrack_server_port);
 		m_dtrack = MakeUnique<DTrackSDK>(CopiedSettings.m_dtrack_server_port);
 	}
 
