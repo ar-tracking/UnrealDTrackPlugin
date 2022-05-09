@@ -28,12 +28,18 @@
 
 #include "ILiveLinkSource.h"
 
-// Avoid 'warning C4005' when including DTrackSDK
-#include "Windows/AllowWindowsPlatformTypes.h"
-#include "Windows/PreWindowsApi.h"
+#if PLATFORM_WINDOWS
+	// Avoid 'warning C4005' when including DTrackSDK
+	#include "Windows/AllowWindowsPlatformTypes.h"
+	#include "Windows/PreWindowsApi.h"
+#endif
+
 #include "DTrackSDK.hpp"
-#include "Windows/PostWindowsApi.h"
-#include "Windows/HideWindowsPlatformTypes.h"
+
+#if PLATFORM_WINDOWS
+	#include "Windows/PostWindowsApi.h"
+	#include "Windows/HideWindowsPlatformTypes.h"
+#endif
 
 #include "HAL/Runnable.h"
 #include "HAL/ThreadSafeBool.h"
@@ -60,6 +66,9 @@ public:
 
 	// Stops the server listening thread if any and stop measurements on the SDK
 	void stop_listening();
+
+	// Get the name for a specific body index
+	bool get_body_name(uint32 body_index, std::string& body_name);
 
 public:
 
