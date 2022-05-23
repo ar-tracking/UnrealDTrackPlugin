@@ -5,9 +5,9 @@ This is a plug-in for the Unreal Engine with the purpose of native integration o
 
 ## Prerequisites
 
-- Unreal Engine 4.23 or later
+- Unreal Engine 5.0.1. It also works for Unreal4 from Unreal 4.23 and later
 - Windows
-- Microsoft Visual Studio 2015 or later (Express or Community Edition should suffice)
+- Microsoft Visual Studio 2022 for UE5 and Visual Studio 2017 and 2019 for UE4 (Express or Community Edition should suffice)
 
 
 ## Installation
