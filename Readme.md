@@ -1,4 +1,4 @@
-# DTrack Plugin for Unreal Engine 4
+# DTrack Plugin for Unreal Engine 5
 
 This is a plug-in for the Unreal Engine with the purpose of native integration of the [Advanded Realtime Tracking][1] _DTrack_ and _DTrack2_ tracking solutions. It injects data into the engine through LiveLink. Data can be accessed through Blueprint or C++. The plugin currently supports the DTrack body`6d`and flystick`6df2`data format.
 
@@ -14,7 +14,7 @@ This is a plug-in for the Unreal Engine with the purpose of native integration o
 
 ### Preparation
 
-- Adapt the _.uplugin_ file to the version of your _UnrealEditor_:<br>The `EngineVersion` key in the file _DTrackPlugin.uplugin_ comes with a default value corresponding to the latest tested _UE4Editor_ version (e.g. `"EngineVersion": "4.25.0"`).<br>If you are using an _UE4Editor_ version with a different minor version number (e.g. 4.23 instead of 4.25), you should adjust this value (e.g. to `"EngineVersion": "4.23.0"`).
+- Adapt the _.uplugin_ file to the version of your _UnrealEditor_:<br>The `EngineVersion` key in the file _DTrackPlugin.uplugin_ comes with a default value corresponding to the latest tested _UE4Editor_ version (e.g. `"EngineVersion": "5.0.1"` or `"EngineVersion": "4.25.0"`).<br>If you are using an _UE4Editor_ version with a different minor version number (e.g. 4.23 instead of 4.25), you should adjust this value (e.g. to `"EngineVersion": "4.23.0"`).
 
 ### Install into the global Engine plugin folder
 - Compile the plugin manually:<br> *&lt;UE4Dir&gt;\Engine\Build\BatchFiles\RunUAT.bat* BuildPlugin -Plugin=*/Path/to/DTrackPlugin.uplugin* -TargetPlatforms=Win64 -Package=*&lt;OutDir&gt;* -Rocket
