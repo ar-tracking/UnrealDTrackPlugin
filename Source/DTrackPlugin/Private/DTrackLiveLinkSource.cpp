@@ -69,17 +69,15 @@ FText FDTrackLiveLinkSource::GetSourceStatus() const {
 
 
 
-#if ENGINE_MINOR_VERSION >= 24
-	TSubclassOf<ULiveLinkSourceSettings>  FDTrackLiveLinkSource::GetSettingsClass() const {
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MINOR_VERSION>=23)
+TSubclassOf<ULiveLinkSourceSettings>  FDTrackLiveLinkSource::GetSettingsClass() const {
 		return UDTrackLiveLinkSourceSettings::StaticClass();
-	}
-#else	
+}
+#else
 	UClass* FDTrackLiveLinkSource::GetCustomSettingsClass() const {
 		return UDTrackLiveLinkSourceSettings::StaticClass();
 	}	
 #endif
-
-
 
 void FDTrackLiveLinkSource::OnSettingsChanged(ULiveLinkSourceSettings* InSettings, const FPropertyChangedEvent& InPropertyChangedEvent) {
 
