@@ -17,13 +17,13 @@ This is a plug-in for the Unreal Engine with the purpose of native integration o
 - Adapt the _.uplugin_ file to the version of your _UnrealEditor_:<br>The `EngineVersion` key in the file _DTrackPlugin.uplugin_ comes with a default value corresponding to the latest tested _UE4Editor_ version (e.g. `"EngineVersion": "5.0.1"` or `"EngineVersion": "4.25.0"`).<br>If you are using an _UE4Editor_ version with a different minor version number (e.g. 4.23 instead of 4.25), you should adjust this value (e.g. to `"EngineVersion": "4.23.0"`).
 
 ### Install into the global Engine plugin folder
-- Compile the plugin manually:<br> *&lt;UE4Dir&gt;\Engine\Build\BatchFiles\RunUAT.bat* BuildPlugin -Plugin=*/Path/to/DTrackPlugin.uplugin* -TargetPlatforms=Win64 -Package=*&lt;OutDir&gt;* -Rocket
-- Copy *&lt;OutDir&gt;* to *&lt;UE4Dir&gt;\Engine\Plugins\DTrackPlugin*
+- Compile the plugin manually:<br> *&lt;UE5Dir&gt;\Engine\Build\BatchFiles\RunUAT.bat* BuildPlugin -Plugin=*/Path/to/DTrackPlugin.uplugin* -TargetPlatforms=Win64 -Package=*&lt;OutDir&gt;* -Rocket
+- Copy *&lt;OutDir&gt;* to *&lt;UE5Dir&gt;\Engine\Plugins\DTrackPlugin*
 
 
 
 ### Alternatively, install into your local project plugin folder
-- Open the UE4Editor and create an Unreal C++ project
+- Open the UE5Editor and create an Unreal C++ project
 - Copy the plugin to *&lt;project&gt;\Plugins\DTrackPlugin*
 - Compilation then takes place automatically when starting your Unreal project
 
