@@ -1,29 +1,34 @@
-# DTrack Plugin for Unreal Engine 4
+# DTrack Plugin for Unreal Engine 4/5
 
-This is a plug-in for the Unreal Engine with the purpose of native integration of the [Advanded Realtime Tracking][1] _DTrack_ and _DTrack2_ tracking solutions. It injects data into the engine through LiveLink. Data can be accessed through Blueprint or C++. The plugin currently supports the DTrack body`6d`and flystick`6df2`data format.
+This is a plug-in for the Unreal Engine with the purpose of native integration of the [Advanded Realtime Tracking][1] _DTrack_ tracking solutions. It injects data into the engine through LiveLink. Data can be accessed through Blueprint or C++. The plugin currently supports the DTrack body`6d`and flystick`6df2`data format.
 
 
 ## Prerequisites
 
-- Unreal Engine 4.23 or later
+- Unreal Engine 4 (4.23 or later), Unreal Engine 5 (5.0.2 or later)
 - Windows
-- Microsoft Visual Studio 2015 or later (Express or Community Edition should suffice)
+- Microsoft Visual Studio. See the [Unreal documentation][2] for selecting and installing the correct version.
 
 
 ## Installation
 
 ### Preparation
 
-- Adapt the _.uplugin_ file to the version of your _UnrealEditor_:<br>The `EngineVersion` key in the file _DTrackPlugin.uplugin_ comes with a default value corresponding to the latest tested _UE4Editor_ version (e.g. `"EngineVersion": "4.25.0"`).<br>If you are using an _UE4Editor_ version with a different minor version number (e.g. 4.23 instead of 4.25), you should adjust this value (e.g. to `"EngineVersion": "4.23.0"`).
+- Adapt the _.uplugin_ file to the version of your _UnrealEditor_:<br>The `EngineVersion` key in the file _DTrackPlugin.uplugin_ comes with a default value corresponding to the latest tested _Unreal Editor_ version (e.g. `"EngineVersion": "4.25.0"`).
+  If you are using an _Unreal Editor_ version with a different minor version number (e.g. 4.23 instead of 4.25), you should adjust this value (e.g. to `"EngineVersion": "4.23.0"`).
+  
+- If you are using the sample project _[UnrealDTrackSample][3]_, you should adopt the engine version within the _.uproject_ file as well. 
 
 ### Install into the global Engine plugin folder
-- Compile the plugin manually:<br> *&lt;UE4Dir&gt;\Engine\Build\BatchFiles\RunUAT.bat* BuildPlugin -Plugin=*/Path/to/DTrackPlugin.uplugin* -TargetPlatforms=Win64 -Package=*&lt;OutDir&gt;* -Rocket
-- Copy *&lt;OutDir&gt;* to *&lt;UE4Dir&gt;\Engine\Plugins\DTrackPlugin*
+- Compile the plugin manually:
+  <br> *&lt;UEDir&gt;\Engine\Build\BatchFiles\RunUAT.bat* BuildPlugin -Plugin=*/Path/to/DTrackPlugin.uplugin* -TargetPlatforms=Win64 -Package=*&lt;OutDir&gt;* -Rocket *&lt;VS-version&gt;*
+  <br> Here *&lt;VS-version&gt;* designates the Visual Studio version chosen above (e.g. -VS2022).
+- Copy the folder *&lt;OutDir&gt;* to *&lt;UE4Dir&gt;\Engine\Plugins\DTrackPlugin*
 
 
 
 ### Alternatively, install into your local project plugin folder
-- Open the UE4Editor and create an Unreal C++ project
+- Open the _Unreal Editor_ and create an Unreal C++ project
 - Copy the plugin to *&lt;project&gt;\Plugins\DTrackPlugin*
 - Compilation then takes place automatically when starting your Unreal project
 
@@ -62,7 +67,7 @@ The plugin transforms a right-handed position of a DTrack 6DoF measurement to a 
 
 ### DTrack Output Configuration
 
-Via _Tracking > Output_ in the DTrack UI you can set up IP and port of the host of your Unreal Editor or application.
+Via _Tracking > Output_ in the DTrack UI you can set up IP and port of the host of your _Unreal Editor_ or application.
 In the corresponding dialog, you can also enable the DTrack output types `6d` and `6df2`.
 
 <br>
@@ -74,10 +79,12 @@ In the corresponding dialog, you can also enable the DTrack output types `6d` an
 
 ## Plugin Usage
 
-See [UnrealDTrackSample](https://www.github.com/ar-tracking/UnrealDTrackSample) for a detailed example.
+See [UnrealDTrackSample][3] for a detailed example.
 
 The mapping of Flystick buttons and joystick is listed in *DTrackFlystickInputDevice.cpp* within the *DTrackPlugin\Source\DTrackInput\Private* directory.
 
 
 
 [1]: https://ar-tracking.com/
+[2]: https://docs.unrealengine.com/5.0/en-US/setting-up-visual-studio-development-environment-for-cplusplus-projects-in-unreal-engine
+[3]: https://www.github.com/ar-tracking/UnrealDTrackSample

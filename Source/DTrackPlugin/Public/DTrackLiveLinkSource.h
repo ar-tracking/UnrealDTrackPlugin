@@ -53,7 +53,7 @@ public:
 	virtual FText GetSourceMachineName() const override;
 	virtual FText GetSourceStatus() const override;
 	
-#if ENGINE_MINOR_VERSION >= 24
+#if ENGINE_MAJOR_VERSION == 5 || ( ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION>=24 )
 	virtual TSubclassOf<ULiveLinkSourceSettings>  GetSettingsClass() const override;
 #else
 	virtual UClass* GetCustomSettingsClass() const;

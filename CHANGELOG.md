@@ -2,6 +2,13 @@
 # Changelog
 
 
+## v0.8.0
+
+- Update to Unreal Engine 5
+- Allow restart of LiveLink source
+- Fixed joystick input of Flystick2+
+
+
 ## v0.7.3
 
 - Changed Flystick button and joystick mapping

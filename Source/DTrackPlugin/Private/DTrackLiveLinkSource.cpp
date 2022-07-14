@@ -29,6 +29,7 @@
 #include "DTrackPlugin.h"
 #include "DTrackLiveLinkSourceSettings.h"
 #include "DTrackSDKHandler.h"
+#include "DTrackLiveLinkRole.h"
 #include "ILiveLinkClient.h"
 #include "Misc/App.h"
 #include "Roles/LiveLinkAnimationRole.h"
@@ -48,12 +49,15 @@ void FDTrackLiveLinkSource::ReceiveClient(ILiveLinkClient* InClient, FGuid InSou
 
 	m_client = InClient;
 	m_source_guid = InSourceGuid;
-	m_sdk_handler = MakeUnique<FDTrackSDKHandler>(this);
+	if (!m_sdk_handler.IsValid()) {
+		m_sdk_handler = MakeUnique<FDTrackSDKHandler>(this);
+	}
 }
 
 void FDTrackLiveLinkSource::InitializeSettings(ULiveLinkSourceSettings* InSettings) {
 
 	m_source_settings = CastChecked<UDTrackLiveLinkSourceSettings>(InSettings);
+	reset_datamaps();
 	m_sdk_handler->start_listening(m_source_settings->m_server_settings);
 }
 
@@ -69,17 +73,15 @@ FText FDTrackLiveLinkSource::GetSourceStatus() const {
 
 
 
-#if ENGINE_MINOR_VERSION >= 24
-	TSubclassOf<ULiveLinkSourceSettings>  FDTrackLiveLinkSource::GetSettingsClass() const {
+#if ENGINE_MAJOR_VERSION == 5 || ( ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION>=24 )
+TSubclassOf<ULiveLinkSourceSettings>  FDTrackLiveLinkSource::GetSettingsClass() const {
 		return UDTrackLiveLinkSourceSettings::StaticClass();
-	}
-#else	
+}
+#else
 	UClass* FDTrackLiveLinkSource::GetCustomSettingsClass() const {
 		return UDTrackLiveLinkSourceSettings::StaticClass();
 	}	
 #endif
-
-
 
 void FDTrackLiveLinkSource::OnSettingsChanged(ULiveLinkSourceSettings* InSettings, const FPropertyChangedEvent& InPropertyChangedEvent) {
 
@@ -290,6 +292,7 @@ void FDTrackLiveLinkSource::reset_datamaps() {
 bool FDTrackLiveLinkSource::RequestSourceShutdown() {
 
 	m_sdk_handler->Stop();
+	reset_datamaps();
 	return true;
 }
 

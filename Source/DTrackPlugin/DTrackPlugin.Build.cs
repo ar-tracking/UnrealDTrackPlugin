@@ -28,7 +28,7 @@ namespace UnrealBuildTool.Rules
 {
     using System.IO;
     using System;
-	using Tools.DotNETCommon;
+	//using Tools.DotNETCommon;
 
 	public class DTrackPlugin : ModuleRules
 	{   
@@ -72,7 +72,7 @@ namespace UnrealBuildTool.Rules
 
         private void Trace(string msg)
         {
-            Log.TraceError("Plugin + : " + msg);
+            //Log.TraceError("Plugin + : " + msg);
         }
 	}
 

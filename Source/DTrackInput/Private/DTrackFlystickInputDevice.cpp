@@ -139,21 +139,16 @@ void FDTrackFlystickInputDevice::SendControllerEvents() {
 
 			for (int32 i = 0; i < flystick_frame_data->m_joystick_state.Num(); ++i) 
 			{			
+				if (i >= 2) break;	// TODO, support 'jt' entry of Fly2+
+
 				const float current_joystick_state = flystick_frame_data->m_joystick_state[i];
 				if (current_joystick_state != flystick_state.m_joysticks_state[i])
 				{
 					flystick_changed = true;
-			
 					m_message_handler->OnControllerAnalog( m_joystick_mapping[i], flystick_static_data->m_flystick_id, current_joystick_state);
 					flystick_state.m_joysticks_state[i] = current_joystick_state;
 				}
 			}
-
-			//if ( flystick_changed  &&  flystick_frame_data->m_joystick_state.Num() == 2)  {
-			//	UE_LOG( LogDTrackInput, Warning, TEXT( "flystick name %s id %d joystick x %.2f y %.2f"), 
-			//		*flystick_name.ToString(),  flystick_static_data->m_flystick_id,
-			//		flystick_state.m_joysticks_state[0], flystick_state.m_joysticks_state[1] );
-			//}
 		}
 	}
 	
