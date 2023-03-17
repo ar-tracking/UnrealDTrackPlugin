@@ -75,4 +75,44 @@ FText UDTrackFlystickInputRole::GetDisplayName() const {
 }
 
 
+/**
+ * UDTrackHandRole
+ */
+UScriptStruct* UDTrackHandRole::GetStaticDataStruct() const {
+
+	return FDTrackHandStaticData::StaticStruct();
+}
+
+UScriptStruct* UDTrackHandRole::GetFrameDataStruct() const {
+
+	return FLiveLinkAnimationFrameData::StaticStruct();
+}
+
+UScriptStruct* UDTrackHandRole::GetBlueprintDataStruct() const {
+
+	return FDTrackHandBlueprintData::StaticStruct();
+}
+
+bool UDTrackHandRole::InitializeBlueprintData(const FLiveLinkSubjectFrameData& InSourceData, FLiveLinkBlueprintDataStruct& OutBlueprintData) const {
+
+	bool is_success = false;
+
+	FDTrackHandBlueprintData* blueprint_data = OutBlueprintData.Cast<FDTrackHandBlueprintData>();
+	const FDTrackHandStaticData* static_data = InSourceData.StaticData.Cast<FDTrackHandStaticData>();
+	const FLiveLinkAnimationFrameData* frame_data = InSourceData.FrameData.Cast<FLiveLinkAnimationFrameData>();
+	if (blueprint_data && static_data && frame_data)
+	{
+		GetStaticDataStruct()->CopyScriptStruct(&blueprint_data->m_static_data, static_data);
+		GetFrameDataStruct()->CopyScriptStruct(&blueprint_data->m_frame_data, frame_data);
+		is_success = true;
+	}
+
+	return is_success;
+}
+
+FText UDTrackHandRole::GetDisplayName() const {
+
+	return LOCTEXT("DTrackHandRole", "DTrack Hand");
+}
+
 #undef LOCTEXT_NAMESPACE

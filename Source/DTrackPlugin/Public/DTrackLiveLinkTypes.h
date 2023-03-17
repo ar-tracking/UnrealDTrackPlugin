@@ -91,3 +91,41 @@ public:
 	FDTrackFlystickInputFrameData m_frame_data;
 };
 
+
+/**
+ * Static data for hand tracking data.
+ */
+USTRUCT(BlueprintType)
+struct DTRACKPLUGIN_API FDTrackHandStaticData : public FLiveLinkSkeletonStaticData
+{
+	GENERATED_BODY()
+
+public:
+
+	// Number of tracked fingers
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hands")
+		bool m_is_right_hand;
+
+	// Tracked finger types
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fingers")
+		TArray<EDTrackFingerType> m_fingers_type;
+};
+
+
+/**
+ * Facility structure to handle hand data in blueprint
+ */
+USTRUCT(BlueprintType)
+struct DTRACKPLUGIN_API FDTrackHandBlueprintData : public FLiveLinkBaseBlueprintData
+{
+	GENERATED_BODY()
+
+public:
+	// Static data that should not change every frame
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LiveLink")
+		FDTrackHandStaticData m_static_data;
+
+	// Dynamic data that can change every frame
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LiveLink")
+		FLiveLinkAnimationFrameData m_frame_data;
+};

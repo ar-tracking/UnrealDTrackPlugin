@@ -45,22 +45,24 @@ namespace UnrealBuildTool.Rules
 				}
 				);
 
-			PublicDependencyModuleNames.AddRange(
-				new string[] {
-					"Core",
-					"CoreUObject",
+            PublicDependencyModuleNames.AddRange(
+                new string[] {
+                    "Core",
+                    "CoreUObject",
                     "Engine",
-					"InputDevice",
-					"LiveLinkInterface",
-				}
-				);
+                    "InputDevice",
+                    "LiveLinkInterface",
+					"LiveLinkAnimationCore",
+                }
+                );
 
 			PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{
-					"LiveLinkMovieScene"
-				}
-				);
+                    "LiveLink",
+                    "LiveLinkMovieScene",
+                }
+                );
 
 			DynamicallyLoadedModuleNames.AddRange(
 				new string[]

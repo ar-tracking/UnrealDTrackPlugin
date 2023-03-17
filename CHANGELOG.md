@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v0.9.0
+
+- Fingertracking support
+
 
 ## v0.8.0
 

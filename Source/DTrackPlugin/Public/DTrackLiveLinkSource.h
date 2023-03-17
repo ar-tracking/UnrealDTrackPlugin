@@ -32,7 +32,6 @@
 
 #include "Runtime/Launch/Resources/Version.h" 
 
-
 class FDTrackSDKHandler;
 class ILiveLinkClient;
 
@@ -65,6 +64,10 @@ public:
 	void handle_body_data_anythread(double n_worldtime, double n_timestamp, int32 n_itemId, float n_quality, const FVector& n_location, const FRotator& n_rotation);
 	void handle_flystick_data_anythread(double n_worldtime, double n_timestamp, int32 n_itemId, float n_quality, const FVector& n_location, const FRotator& n_rotation, TArray<bool>& n_temp_buttons, TArray<float>& n_temp_joysticks);
 
+	void handle_hand_data_anythread(double n_worldtime, double n_timestamp, int32 n_itemId, float n_quality, bool n_is_right_hand, const FTransform& n_transform, TArray<EDTrackFingerType>& n_temp_fingers_type, TArray<FDTrackFinger>& n_temp_fingers);
+
+	TSharedPtr<FDTrackSDKHandler> GetDTrackSDKHandler() { return m_sdk_handler; };
+
 protected:
 
 	void reset_datamaps();
@@ -84,7 +87,7 @@ private:
 	FGuid m_source_guid;
 
 	// Access to DTrack sdk
-	TUniquePtr<FDTrackSDKHandler> m_sdk_handler;
+	TSharedPtr<FDTrackSDKHandler> m_sdk_handler;
 
 	// Settings instance that we've been assigned
 	TWeakObjectPtr<UDTrackLiveLinkSourceSettings> m_source_settings;
@@ -98,4 +101,8 @@ private:
 	TMap<int32, FLiveLinkSubjectKey> m_flystick_input_subjects;
 	TMap<FName, FDTrackFlystickInputStaticData> m_flystick_input_static_data_map;
 
+	TMap<int32, FLiveLinkSubjectKey> m_hand_subjects;
+	TMap<FName, FDTrackHandStaticData> m_hand_static_data_map;
+	TMap<int32, FLiveLinkSubjectKey> m_human_subjects;
+	TMap<FName, FLiveLinkSkeletonStaticData> m_human_static_data_map;
 };

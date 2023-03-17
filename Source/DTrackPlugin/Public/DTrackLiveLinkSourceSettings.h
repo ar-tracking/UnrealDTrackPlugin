@@ -29,14 +29,15 @@
 #include "LiveLinkSourceSettings.h"
 
 #include "DTrackInterface.h"
+#include "Math/Axis.h"
 
 #include "DTrackLiveLinkSourceSettings.generated.h"
 
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FDTrackServerSettings
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 public:
 
@@ -45,6 +46,7 @@ public:
 		return m_dtrack_server_ip == Other.m_dtrack_server_ip
 			&& m_dtrack_server_port == Other.m_dtrack_server_port
 			&& m_dtrack_start_mea == Other.m_dtrack_start_mea
+			&& m_dtrack_tactile_fingers == Other.m_dtrack_tactile_fingers
 			&& m_coordinate_system == Other.m_coordinate_system;
 	}
 
@@ -55,16 +57,19 @@ public:
 
 public:
 
-	UPROPERTY(EditAnywhere, Category = "Server Settings", meta = (DisplayName = "DTrack Data Port", ToolTip = "Port your server sends data to"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Server Settings", meta = (DisplayName = "DTrack Data Port", ToolTip = "Port your server sends data to"))
 	int32 m_dtrack_server_port = 5000;
 
-	//UPROPERTY(EditAnywhere, Category = "Server Settings", meta = (DisplayName = "Start DTrack Measurement", ToolTip = "Start measurement via the DTrack2 TCP command channel"))
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Server Settings", meta = (DisplayName = "Start DTrack Measurement", ToolTip = "Start measurement via the DTrack2 TCP command channel"))
 	bool m_dtrack_start_mea = false;
 	
-	//UPROPERTY(EditAnywhere, Category = "Server Settings", meta = (DisplayName = "DTrack Server IP", ToolTip = "IP of DTrack server host for starting measurement"))
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Server Settings", meta = (DisplayName = "Use tactile feedback for fingertracking", ToolTip = "Start DTrack with tactile feedback for fingertracking"))
+	bool m_dtrack_tactile_fingers = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Server Settings", meta = (DisplayName = "DTrack Server IP", ToolTip = "IP of DTrack server host for starting measurement"))
 	FString m_dtrack_server_ip = "127.0.0.1";
 
-	//UPROPERTY(EditAnywhere, Category = "Server Settings", meta = (DisplayName = "DTrack Room Calibration", ToolTip = "Set this according to your DTrack system's room calibration"))
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Server Settings", meta = (DisplayName = "DTrack Room Calibration", ToolTip = "Set this according to your DTrack system's room calibration"))
 	EDTrackCoordinateSystemType m_coordinate_system = EDTrackCoordinateSystemType::CST_Unreal_Adapted;
 };
 
@@ -74,6 +79,6 @@ class DTRACKPLUGIN_API UDTrackLiveLinkSourceSettings : public ULiveLinkSourceSet
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category = "Dtrack settings")
+	UPROPERTY(EditAnywhere, Category = "DTrack settings")
 	FDTrackServerSettings m_server_settings;
 };

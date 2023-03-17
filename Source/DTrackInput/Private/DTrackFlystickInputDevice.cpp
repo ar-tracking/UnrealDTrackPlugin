@@ -28,6 +28,8 @@
 
 #include "DTrackFlystickInputDevice.h"
 
+#include "Runtime/Launch/Resources/Version.h"
+
 #include "DTrackLiveLinkRole.h"
 #include "DTrackInputModule.h"
 #include "Features/IModularFeatures.h"
@@ -193,7 +195,15 @@ void FDTrackFlystickInputDevice::on_livelink_subject_added_handler(FLiveLinkSubj
 		return;
 	}
 
+#if  ENGINE_MAJOR_VERSION == 5 
+	TSubclassOf<ULiveLinkRole> subject_role = m_livelink_client->GetSubjectRole_AnyThread(n_subject_key.SubjectName);
+#else
 	TSubclassOf<ULiveLinkRole> subject_role = m_livelink_client->GetSubjectRole(n_subject_key.SubjectName);
+#endif
+	
+	if (!subject_role->IsValidLowLevelFast())
+		return;
+	
 	if (subject_role->IsChildOf(UDTrackFlystickInputRole::StaticClass()))
 	{
 		m_flysticks.Add(n_subject_key);

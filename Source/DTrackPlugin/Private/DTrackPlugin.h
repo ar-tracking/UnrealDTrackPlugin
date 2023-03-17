@@ -54,6 +54,8 @@ public:
 	virtual bool is_livelink_source_valid() const override;
 	//~ End IDTrackPlugin
 
+	virtual TSharedPtr<class FDTrackLiveLinkSource> get_fdtrack_livelink_source() override;
+
 private:
 	TSharedPtr<FDTrackLiveLinkSource> create_livelink_source();
 	void handle_app_pre_exit();

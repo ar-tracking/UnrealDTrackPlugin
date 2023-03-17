@@ -1,9 +1,9 @@
-/* DTrackSDK: C++ header file, A.R.T. GmbH
+/* DTrackSDK: C++ header file
  *
  * DTrackSDK: functions to receive and process DTrack UDP packets (ASCII protocol), as
  * well as to exchange DTrack2/DTrack3 TCP command strings.
  *
- * Copyright (c) 2007-2020, Advanced Realtime Tracking GmbH
+ * Copyright (c) 2007-2021 Advanced Realtime Tracking GmbH & Co. KG
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
- * Version v2.6.0
+ * Version v2.7.0
  *
  * Purpose:
  *  - receives DTrack UDP packets (ASCII protocol) and converts them into easier to handle data
@@ -193,7 +193,7 @@ public:
 	/**
 	 * \brief Alias for isDataInterfaceValid(). DEPRECATED.
 	 *
-	 * Due to compatibility to DTrackSDK v2.5.0.
+	 * Due to compatibility to DTrackSDK v2.0.0 - v2.5.0.
 	 *
 	 * @return Socket is open?
 	 */
@@ -248,7 +248,7 @@ public:
 	/**
 	 * \brief Alias for setCommandTimeoutUS(). DEPRECATED.
 	 *
-	 * Due to compatibility to DTrackSDK v2.5.0.
+	 * Due to compatibility to DTrackSDK v2.0.0 - v2.5.0.
 	 *
 	 * @param[in] timeout Timeout for reply of Controller in us; 0 to set default (10.0 s)
 	 * @return            Success? (i.e. valid timeout)
@@ -346,7 +346,17 @@ public:
 	 * @param[in] command Command string
 	 * @return            Sending command succeeded? If not, a DTrack error is available
 	 */
-	bool sendCommand(const std::string& command);
+	bool sendDTrack1Command( const std::string& command );
+
+	/**
+	 * \brief Alias for sendDTrack1Command(). DEPRECATED.
+	 *
+	 * Due to compatibility to DTrackSDK v2.0.0 - v2.6.0.
+	 *
+	 * @param[in] command Command string
+	 * @return            Sending command succeeded? If not, a DTrack error is available
+	 */
+	bool sendCommand( const std::string& command )  { return sendDTrack1Command( command ); }
 
 	/**
 	 * \brief Send DTrack2/DTrack3 command to DTrack and receive answer (TCP command interface).
@@ -449,9 +459,12 @@ public:
 
 
 	/**
-	 * \brief Send tactile command to set feedback on a specific finger of a specific hand.
+	 * \brief Send tactile FINGERTRACKING command to set feedback on a specific finger of a specific hand.
 	 *
 	 * Has to be repeated at least every second; otherwise a timeout mechanism will turn off any feedback.
+	 *
+	 * Sends command to the sender IP address of the latest received UDP data, if no hostname or IP address
+	 * of a Controller is defined.
 	 *
 	 * @param[in] handId   Hand id, range 0 ..
 	 * @param[in] fingerId Finger id, range 0 ..
@@ -461,9 +474,12 @@ public:
 	bool tactileFinger( int handId, int fingerId, double strength );
 
 	/**
-	 * \brief Send tactile command to set tactile feedback on all fingers of a specific hand.
+	 * \brief Send tactile FINGERTRACKING command to set tactile feedback on all fingers of a specific hand.
 	 *
 	 * Has to be repeated at least every second; otherwise a timeout mechanism will turn off any feedback.
+	 *
+	 * Sends command to the sender IP address of the latest received UDP data, if no hostname or IP address
+	 * of a Controller is defined.
 	 *
 	 * @param[in] handId   Hand id, range 0 ..
 	 * @param[in] strength Strength of feedback on all fingers, between 0.0 and 1.0
@@ -472,7 +488,10 @@ public:
 	bool tactileHand( int handId, const std::vector< double >& strength );
 
 	/**
-	 * \brief Send tactile command to turn off tactile feedback on all fingers of a specific hand.
+	 * \brief Send tactile FINGERTRACKING command to turn off tactile feedback on all fingers of a specific hand.
+	 *
+	 * Sends command to the sender IP address of the latest received UDP data, if no hostname or IP address
+	 * of a Controller is defined.
 	 *
 	 * @param[in] handId    Hand id, range 0 ..
 	 * @param[in] numFinger Number of fingers
@@ -481,10 +500,36 @@ public:
 	bool tactileHandOff( int handId, int numFinger );
 
 
+	/**
+	 * \brief Send Flystick feedback command to start a beep on a specific Flystick.
+	 *
+	 * Sends command to the sender IP address of the latest received UDP data, if no hostname or IP address
+	 * of a Controller is defined.
+	 *
+	 * @param[in] flystickId  Flystick id, range 0 ..
+	 * @param[in] durationMs  Time duration of the beep (in milliseconds)
+	 * @param[in] frequencyHz Frequency of the beep (in Hertz)
+	 * @return                Success? (if not, a DTrack error message is available)
+	 */
+	bool flystickBeep( int flystickId, double durationMs, double frequencyHz );
+
+	/**
+	 * \brief Send Flystick feedback command to start a vibration pattern on a specific Flystick.
+	 *
+	 * Sends command to the sender IP address of the latest received UDP data, if no hostname or IP address
+	 * of a Controller is defined.
+	 *
+	 * @param[in] flystickId       Flystick id, range 0 ..
+	 * @param[in] vibrationPattern Vibration pattern id, range 1 ..
+	 * @return                     Success? (if not, a DTrack error message is available)
+	 */
+	bool flystickVibration( int flystickId, int vibrationPattern );
+
+
 private:
 
 	static const unsigned short DTRACK2_PORT_COMMAND = 50105;  //!< Controller port number (TCP) for 'dtrack2' commands
-	static const unsigned short DTRACK2_PORT_TACTILE = 50110;  //!< Controller port number (UDP) for 'tfb' tactile commands
+	static const unsigned short DTRACK2_PORT_FEEDBACK = 50110;  //!< Controller port number (UDP) for feedback commands
 
 	static const int DEFAULT_TCP_TIMEOUT = 10000000;  //!< default TCP timeout (in us)
 	static const int DEFAULT_UDP_TIMEOUT = 1000000;   //!< default UDP timeout (in us)
@@ -502,12 +547,20 @@ private:
 	 * \brief Private init called by constructor.
 	 *
 	 * @param[in] server_host Hostname/IP of Controller/DTrack1 PC, or multicast IP (empty string if not used)
-	 * @param[in] server_port Port number of Controller to receive commands
+	 * @param[in] server_port Port number (UDP) of DTrack1 PC to send commands to (0 if not used)
 	 * @param[in] data_port   Port number (UDP) to receive tracking data from DTrack (0 if to be chosen)
 	 * @param[in] remote_type Type of system to connect to
 	 */
 	void init( const std::string& server_host, unsigned short server_port, unsigned short data_port,
 	           RemoteSystemType remote_type );
+
+	/**
+	 * \brief Send feedback command via UDP.
+	 *
+	 * @param[in] command Command string
+	 * @return            Sending command succeeded? If not, a DTrack error is available
+	 */
+	bool sendFeedbackCommand( const std::string& command );
 
 	RemoteSystemType rsType;            //!< Remote system type
 	Errors lastDataError;               //!< last transmission error (tracking data)
@@ -520,8 +573,8 @@ private:
 	int d_tcptimeout_us;                //!< timeout for receiving and sending TCP data
 
 	DTrackNet::UDP* d_udp;              //!< socket for UDP
-	unsigned int d_remote_ip;           //!< IP address for remote access
-	unsigned short d_remoteport;        //!< port number for UDP (remote) / TCP
+	unsigned int d_remoteIp;            //!< IP address of Controller/DTrack1 PC (0 if unknown)
+	unsigned short d_remoteDT1Port;     //!< Port number (UDP) of DTrack1 PC to send commands to (0 if unknown)
 	int d_udptimeout_us;                //!< timeout for receiving UDP data
 
 	int d_udpbufsize;                   //!< size of UDP buffer

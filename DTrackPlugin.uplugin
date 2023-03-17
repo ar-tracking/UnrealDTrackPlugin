@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "0.8.0",
+	"VersionName": "0.9.0",
 	"FriendlyName": "DTrack Plugin",
 	"Description": "Plugin for the ART DTrack tracking system.",
 	"Category": "Virtual Production",
@@ -10,7 +10,6 @@
 	"DocsURL": "https://github.com/ar-tracking/UnrealDTrackPlugin",
 	"MarketplaceURL": "",
 	"SupportURL": "https://ar-tracking.com/",
-	"EngineVersion": "5.0.0",
 	"CanContainContent": false,
 	"Installed": true,
 	"Modules": [

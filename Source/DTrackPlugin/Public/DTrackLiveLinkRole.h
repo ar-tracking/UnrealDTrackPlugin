@@ -51,3 +51,21 @@ public:
 	virtual FText GetDisplayName() const override;
 };
 
+
+/**
+ * Role associated for DTrack Hand tracking.
+ */
+UCLASS(BlueprintType, meta = (DisplayName = "DTrack Hand Role"))
+class DTRACKPLUGIN_API UDTrackHandRole : public ULiveLinkAnimationRole
+{
+	GENERATED_BODY()
+
+public:
+	virtual UScriptStruct* GetStaticDataStruct() const override;
+	virtual UScriptStruct* GetFrameDataStruct() const override;
+	virtual UScriptStruct* GetBlueprintDataStruct() const override;
+
+	bool InitializeBlueprintData(const FLiveLinkSubjectFrameData& InSourceData, FLiveLinkBlueprintDataStruct& OutBlueprintData) const override;
+
+	virtual FText GetDisplayName() const override;
+};

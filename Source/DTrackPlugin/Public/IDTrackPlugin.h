@@ -68,6 +68,13 @@ class DTRACKPLUGIN_API IDTrackPlugin :  public IModuleInterface {
 		virtual TSharedPtr<class ILiveLinkSource> get_livelink_source() = 0;
 
 		/**
+		 * Returns the FDTrackLiveLinkSource (LiveLinkSource) associated with this IDTrackLiveLinkModule.
+		 *
+		 * @return Shared pointer to the FDTrackLiveLinkSource (LiveLinkSource).
+		 */
+		virtual TSharedPtr<class FDTrackLiveLinkSource> get_fdtrack_livelink_source() = 0;
+
+		/**
 		 * Checks if the LiveLinkSource as been created.
 		 *
 		 * @return True if the LiveLinkSource has been created with get_livelink_source()

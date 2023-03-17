@@ -1,11 +1,11 @@
 # DTrack Plugin for Unreal Engine 4/5
 
-This is a plug-in for the Unreal Engine with the purpose of native integration of the [Advanded Realtime Tracking][1] _DTrack_ tracking solutions. It injects data into the engine through LiveLink. Data can be accessed through Blueprint or C++. The plugin currently supports the DTrack body`6d`and flystick`6df2`data format.
+This is a plug-in for the Unreal Engine with the purpose of native integration of the [Advanded Realtime Tracking][1] _DTrack_ tracking solutions. It injects data into the engine through LiveLink. Data can be accessed through Blueprint or C++. The plugin currently supports the DTrack body`6d`and flystick`6df2` as well as the finger tracking `gl` data format.
 
 
 ## Prerequisites
 
-- Unreal Engine 4 (4.23 or later), Unreal Engine 5 (5.0.2 or later)
+- Unreal Engine 4 (tested with 4.27), Unreal Engine 5 (5.0.2 or later)
 - Windows
 - Microsoft Visual Studio. See the [Unreal documentation][2] for selecting and installing the correct version.
 
@@ -14,10 +14,8 @@ This is a plug-in for the Unreal Engine with the purpose of native integration o
 
 ### Preparation
 
-- Adapt the _.uplugin_ file to the version of your _UnrealEditor_:<br>The `EngineVersion` key in the file _DTrackPlugin.uplugin_ comes with a default value corresponding to the latest tested _Unreal Editor_ version (e.g. `"EngineVersion": "4.25.0"`).
-  If you are using an _Unreal Editor_ version with a different minor version number (e.g. 4.23 instead of 4.25), you should adjust this value (e.g. to `"EngineVersion": "4.23.0"`).
-  
-- If you are using the sample project _[UnrealDTrackSample][3]_, you should adopt the engine version within the _.uproject_ file as well. 
+- The plugin is prepared to run with Unreal Engine 5. If you want to use it with Unreal Engine 4, you have to manually remove the entry _"LiveLinkAnimationCore",_ from the file _Source\DTrackPlugin\DTrackPlugin.Build.cs_.
+
 
 ### Install into the global Engine plugin folder
 - Compile the plugin manually:
@@ -27,7 +25,7 @@ This is a plug-in for the Unreal Engine with the purpose of native integration o
 
 
 
-### Alternatively, install into your local project plugin folder
+### Alternatively install into your local project plugin folder
 - Open the _Unreal Editor_ and create an Unreal C++ project
 - Copy the plugin to *&lt;project&gt;\Plugins\DTrackPlugin*
 - Compilation then takes place automatically when starting your Unreal project
@@ -68,7 +66,7 @@ The plugin transforms a right-handed position of a DTrack 6DoF measurement to a 
 ### DTrack Output Configuration
 
 Via _Tracking > Output_ in the DTrack UI you can set up IP and port of the host of your _Unreal Editor_ or application.
-In the corresponding dialog, you can also enable the DTrack output types `6d` and `6df2`.
+In the corresponding dialog, you can also enable the DTrack output types `6d`, `6df2` and `gl`.
 
 <br>
 

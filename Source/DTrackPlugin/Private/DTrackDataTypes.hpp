@@ -1,8 +1,8 @@
-/* DTrackDataTypes: C++ header file, A.R.T. GmbH
+/* DTrackDataTypes: C++ header file
  *
  * DTrackSDK: data type definitions.
  *
- * Copyright (c) 2007-2020, Advanced Realtime Tracking GmbH
+ * Copyright 2007-2021, Advanced Realtime Tracking GmbH & Co. KG
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
- * Version v2.6.0
- *
+ * Version v2.7.0
+ * 
  */
 
 #ifndef _ART_DTRACKSDK_DATATYPES_HPP_

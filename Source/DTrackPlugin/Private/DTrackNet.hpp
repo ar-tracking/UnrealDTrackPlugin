@@ -1,8 +1,8 @@
-/* DTrackNet: C++ header file, A.R.T. GmbH
+/* DTrackNet: C++ header file
  *
  * DTrackSDK: functions for receiving and sending UDP/TCP packets.
  *
- * Copyright (c) 2007-2019, Advanced Realtime Tracking GmbH
+ * Copyright 2007-2021, Advanced Realtime Tracking GmbH & Co. KG
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
- * Version v2.6.0
+ * Version v2.7.0
  *
  */
 
@@ -80,13 +80,24 @@ public:
 
 	/**
 	 * \brief Returns if UDP socket is open to receive data.
+	 *
+	 * @return Socket is valid
 	 */
 	bool isValid();
 
 	/**
 	 * \brief Get UDP data port where data is received.
+	 *
+	 * @return Port number
 	 */
 	unsigned short getPort();
+
+	/**
+	 * \brief Get IP address of sender of latest received data.
+	 *
+	 * @return IPv4 address
+	 */
+	unsigned int getRemoteIp();
 
 	/**
 	 * \brief Receive UDP data.
@@ -118,6 +129,7 @@ private:
 	struct _ip_socket_struct* m_socket;
 	unsigned short m_port;
 	unsigned int m_multicastIp;
+	unsigned int m_remoteIp;
 };
 
 

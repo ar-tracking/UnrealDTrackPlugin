@@ -1,8 +1,8 @@
-/* DTrackNet: C++ source file, A.R.T. GmbH
+/* DTrackNet: C++ source file
  *
  * DTrackSDK: functions for receiving and sending UDP/TCP packets.
  *
- * Copyright (c) 2007-2020, Advanced Realtime Tracking GmbH
+ * Copyright 2007-2021, Advanced Realtime Tracking GmbH & Co. KG
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
- * Version v2.6.0
- *
+ * Version v2.7.0
+ * 
  */
 
 #include "DTrackNet.hpp"
@@ -39,7 +39,7 @@
 
 // usually the following should work; otherwise define OS_* manually:
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64)
-	#define OS_WIN   // for MS Windows (2000, XP, Vista, 7, 8)
+	#define OS_WIN   // for MS Windows (2000, XP, Vista, 7, 8, 10)
 #else
 	#define OS_UNIX  // for Unix (Linux, Irix)
 #endif
@@ -137,7 +137,7 @@ unsigned int ip_name2ip( const char* name )
  * Initialize UDP socket.
  */
 UDP::UDP( unsigned short port, unsigned int multicastIp )
-	: m_isValid( false ), m_socket( NULL ), m_port( port ), m_multicastIp( 0 )
+	: m_isValid( false ), m_socket( NULL ), m_port( port ), m_multicastIp( 0 ), m_remoteIp( 0 )
 {
 	struct _ip_socket_struct* s;
 	struct sockaddr_in addr;
@@ -264,6 +264,15 @@ unsigned short UDP::getPort()
 
 
 /*
+ * Get IP address of the sender of the latest received data.
+ */
+unsigned int UDP::getRemoteIp()
+{
+	return m_remoteIp;
+}
+
+
+/*
  * Receive UDP data.
  */
 int UDP::receive( void *buffer, int maxLen, int toutUs )
@@ -291,16 +300,32 @@ int UDP::receive( void *buffer, int maxLen, int toutUs )
 
 	// receiving packet:
 	while ( true )
-	{	// receive one packet:
-		int nbytes = static_cast< int >( recv( m_socket->ossock, (char *)buffer, maxLen, 0 ) );
+	{
+		struct sockaddr_in addr;
+#ifdef OS_UNIX
+		socklen_t addrlen;
+#endif
+#ifdef OS_WIN
+		int addrlen;
+#endif
+		addrlen = sizeof( struct sockaddr_in );
+
+		int nbytes = static_cast< int >( recvfrom( m_socket->ossock, ( char* )buffer, maxLen, 0,
+		                                           ( struct sockaddr* )&addr, &addrlen ) );  // receive one packet
 		if (nbytes < 0)
 		{	// receive error
 			return -3;
 		}
+
+		if ( addr.sin_family == AF_INET )  // only IPv4 supported
+		{
+			m_remoteIp = ntohl( addr.sin_addr.s_addr );
+		}
+
 		// check, if more data available: if so, receive another packet
 		FD_ZERO(&set);
 		FD_SET( m_socket->ossock, &set );
-		
+
 		tout.tv_sec = 0;   // no timeout
 		tout.tv_usec = 0;
 		if (select(FD_SETSIZE, &set, NULL, NULL, &tout) != 1)

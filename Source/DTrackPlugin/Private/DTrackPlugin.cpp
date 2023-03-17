@@ -55,6 +55,16 @@ TSharedPtr<ILiveLinkSource> FDTrackPlugin::get_livelink_source() {
 	return m_livelink_source;
 }
 
+TSharedPtr<FDTrackLiveLinkSource> FDTrackPlugin::get_fdtrack_livelink_source() {
+
+	if (!m_livelink_source.IsValid())
+	{
+		create_livelink_source();
+	}
+
+	return m_livelink_source;
+}
+
 bool FDTrackPlugin::is_livelink_source_valid() const {
 
 	return m_livelink_source.IsValid();

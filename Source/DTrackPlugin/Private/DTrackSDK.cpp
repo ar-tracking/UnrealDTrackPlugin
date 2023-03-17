@@ -1,9 +1,9 @@
-/* DTrackSDK: C++ source file, A.R.T. GmbH
+/* DTrackSDK: C++ source file
  *
  * DTrackSDK: functions to receive and process DTrack UDP packets (ASCII protocol), as
  * well as to exchange DTrack2/DTrack3 TCP command strings.
  *
- * Copyright (c) 2007-2020, Advanced Realtime Tracking GmbH
+ * Copyright (c) 2007-2021 Advanced Realtime Tracking GmbH & Co. KG
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
- * Version v2.6.0
+ * Version v2.7.0
  *
  * Purpose:
  *  - receives DTrack UDP packets (ASCII protocol) and converts them into easier to handle data
@@ -85,7 +85,7 @@ DTrackSDK::DTrackSDK( const std::string& connection )
 	}
 	else
 	{
-		init( host, DTRACK2_PORT_COMMAND, port, SYS_DTRACK_2 );
+		init( host, 0, port, SYS_DTRACK_2 );
 	}
 }
 
@@ -96,7 +96,7 @@ DTrackSDK::DTrackSDK( const std::string& connection )
 DTrackSDK::DTrackSDK(unsigned short data_port)
     : DTrackParser()
 {
-	init("", 0, data_port, SYS_DTRACK_UNKNOWN);
+	init( "", 0, data_port, SYS_DTRACK_UNKNOWN );
 }
 
 
@@ -106,7 +106,7 @@ DTrackSDK::DTrackSDK(unsigned short data_port)
 DTrackSDK::DTrackSDK(const std::string& server_host, unsigned short data_port)
     : DTrackParser()
 {
-	init( server_host, DTRACK2_PORT_COMMAND, data_port, SYS_DTRACK_2 );
+	init( server_host, 0, data_port, SYS_DTRACK_2 );
 }
 
 
@@ -165,50 +165,54 @@ void DTrackSDK::init( const std::string& server_host, unsigned short server_port
 	setCommandTimeoutUS( 0 );
 	setDataBufferSize( 0 );  // creates also UDP buffer
 
-	d_remoteport = server_port;
-	
+	d_remoteIp = 0;
+	d_remoteDT1Port = 0;
+
 	net_init();
-	
+
 	// parse remote address if available
-	d_remote_ip = 0;
-	if (!server_host.empty()) {
-		d_remote_ip = ip_name2ip(server_host.c_str());
-	}
+	unsigned int remoteIp = 0;
+	if ( ! server_host.empty() )
+		remoteIp = ip_name2ip( server_host.c_str() );
 
 	bool isMulticast = false;
-	if ( ( d_remote_ip & 0xf0000000 ) == 0xe0000000 )  // check if multicast IP
+	if ( ( remoteIp & 0xf0000000 ) == 0xe0000000 )  // check if multicast IP
 		isMulticast = true;
 
 	// create UDP socket:
 	
 	if ( isMulticast )  // listen to multicast case
 	{
-		d_udp = new DTrackNet::UDP( data_port, d_remote_ip );
+		d_udp = new DTrackNet::UDP( data_port, remoteIp );
 	} else { // normal case
 		d_udp = new DTrackNet::UDP( data_port );
 	}
 	if ( ! d_udp->isValid() )
 		return;
 
-	if (d_remote_ip) {
-		if ( isMulticast )  // multicast
+	if ( ( remoteIp != 0 ) && ( ! isMulticast ) )  // IP of Controller/DTrack1 PC is known
+	{
+		d_remoteIp = remoteIp;
+
+		if ( rsType == SYS_DTRACK )  // server is DTrack1 PC
 		{
-			d_remoteport = 0;
-		} else {
-			if (rsType != SYS_DTRACK) {
-				d_tcp = new DTrackNet::TCP( d_remote_ip, server_port );
-				if ( ! d_tcp->isValid() )  // no connection to DTrack2/DTrack3 server
+			d_remoteDT1Port = server_port;
+		}
+		else  // server is DTrack2/DTrack3 or unknown: try TCP connection
+		{
+			d_tcp = new DTrackNet::TCP( remoteIp, DTRACK2_PORT_COMMAND );
+			if ( ! d_tcp->isValid() )  // no connection to DTrack2/DTrack3 server
+			{
+				// on error assuming DTrack1 if system is unknown
+				if ( rsType == SYS_DTRACK_UNKNOWN )
 				{
-					// on error assuming DTrack if system is unknown
-					if (rsType == SYS_DTRACK_UNKNOWN)
-					{
-						rsType = SYS_DTRACK;
-						// DTrack will not listen to tcp port 50105 -> ignore tcp connection
-					}
-				} else {
-					// TCP connection up, should be DTrack2
-					rsType = SYS_DTRACK_2;
+					rsType = SYS_DTRACK;  // DTrack1 will not listen to tcp port 50105 -> ignore tcp connection
+					d_remoteDT1Port = server_port;
 				}
+			}
+			else
+			{
+				rsType = SYS_DTRACK_2;  // TCP connection up, should be DTrack2/DTrack3
 			}
 		}
 	}
@@ -496,10 +500,13 @@ void DTrackSDK::setLastDTrackError(int newError, const std::string& newErrorStri
 bool DTrackSDK::startMeasurement()
 {
 	// Check for special DTrack handling
-	if (rsType == SYS_DTRACK) {
-		return (sendCommand("dtrack 10 3")) && (sendCommand("dtrack 31"));
+	if ( rsType == SYS_DTRACK )
+	{
+		if ( ! sendDTrack1Command( "dtrack 10 3" ) )  return false;
+
+		return sendDTrack1Command( "dtrack 31" );
 	}
-	
+
 	// start tracking, 1 means answer "dtrack2 ok"
 	return (1 == sendDTrack2Command("dtrack2 tracking start"));
 }
@@ -511,10 +518,13 @@ bool DTrackSDK::startMeasurement()
 bool DTrackSDK::stopMeasurement()
 {
 	// Check for special DTrack handling
-	if (rsType == SYS_DTRACK) {
-		return (sendCommand("dtrack 32")) && (sendCommand("dtrack 10 0"));
+	if ( rsType == SYS_DTRACK )
+	{
+		if ( ! sendDTrack1Command( "dtrack 32" ) )  return false;
+
+		return sendDTrack1Command( "dtrack 10 0" );
 	}
-	
+
 	// stop tracking, 1 means answer "dtrack2 ok"
 	return (1 == sendDTrack2Command("dtrack2 tracking stop"));
 }
@@ -523,7 +533,7 @@ bool DTrackSDK::stopMeasurement()
 /*
  * Send DTrack1 command via UDP.
  */
-bool DTrackSDK::sendCommand(const std::string& command)
+bool DTrackSDK::sendDTrack1Command( const std::string& command )
 {
 	int err;
 
@@ -551,7 +561,10 @@ bool DTrackSDK::sendCommand(const std::string& command)
 		}
 	}
 
-	err = d_udp->send( (void* )command.c_str(), (int )command.length() + 1, d_remote_ip, d_remoteport, d_udptimeout_us );
+	if ( ( d_remoteIp == 0 ) || ( d_remoteDT1Port == 0 ) )
+		return false;
+
+	err = d_udp->send( ( void* )command.c_str(), ( int )command.length() + 1, d_remoteIp, d_remoteDT1Port, d_udptimeout_us );
 	if ( err != 0 )
 	{
 		lastDataError = ERR_NET;
@@ -835,15 +848,10 @@ std::string DTrackSDK::getMessageMsg() const
 
 
 /*
- * Send tactile command to set feedback on a specific finger of a specific hand.
+ * Send tactile FINGERTRACKING command to set feedback on a specific finger of a specific hand.
  */
 bool DTrackSDK::tactileFinger( int handId, int fingerId, double strength )
 {
-	int err;
-
-	if ( ! isCommandInterfaceValid() )
-		return false;
-
 	setLastDTrackError();
 
 	if ( strength > 1.0 || strength < 0.0 )
@@ -855,27 +863,15 @@ bool DTrackSDK::tactileFinger( int handId, int fingerId, double strength )
 	std::ostringstream os;
 	os << "tfb 1 [" << handId << " " << fingerId << " 1.0 " << strength << "]";
 
-	err = d_udp->send( (void* )os.str().c_str(), (int )os.str().length() + 1, d_remote_ip, DTRACK2_PORT_TACTILE, d_udptimeout_us );
-	if ( err != 0 )
-	{
-		lastDataError = ERR_NET;
-		return false;
-	}
-
-	return true;
+	return sendFeedbackCommand( os.str() );
 }
 
 
 /*
- * Send tactile command to set tactile feedback on all fingers of a specific hand.
+ * Send tactile FINGERTRACKING command to set tactile feedback on all fingers of a specific hand.
  */
 bool DTrackSDK::tactileHand( int handId, const std::vector< double >& strength )
 {
-	int err;
-
-	if ( ! isCommandInterfaceValid() )
-		return false;
-
 	setLastDTrackError();
 
 	std::ostringstream os;
@@ -892,7 +888,73 @@ bool DTrackSDK::tactileHand( int handId, const std::vector< double >& strength )
 		os << "[" << handId << " " << i << " 1.0 " << strength[ i ] << "]";
 	}
 
-	err = d_udp->send( (void* )os.str().c_str(), (int )os.str().length() + 1, d_remote_ip, DTRACK2_PORT_TACTILE, d_udptimeout_us );
+	return sendFeedbackCommand( os.str() );
+}
+
+
+/*
+ * Send tactile FINGERTRACKING command to turn off tactile feedback on all fingers of a specific hand.
+ */
+bool DTrackSDK::tactileHandOff( int handId, int numFinger )
+{
+	setLastDTrackError();
+
+	std::vector< double > strength( numFinger, 0.0 );
+
+	return tactileHand( handId, strength );
+}
+
+
+/*
+ * Send Flystick feedback command to start a beep on a specific Flystick.
+ */
+bool DTrackSDK::flystickBeep( int flystickId, double durationMs, double frequencyHz )
+{
+	setLastDTrackError();
+
+	std::ostringstream os;
+	os << "ffb 1 ";
+	os << "[" << flystickId << " " << ( int )durationMs << " " << ( int )frequencyHz << " 0 0][]";
+
+	return sendFeedbackCommand( os.str() );
+}
+
+
+/*
+ * Send Flystick feedback command to start a vibration pattern on a specific Flystick.
+ */
+bool DTrackSDK::flystickVibration( int flystickId, int vibrationPattern )
+{
+	setLastDTrackError();
+
+	std::ostringstream os;
+	os << "ffb 1 ";
+	os << "[" << flystickId << " 0 0 " << vibrationPattern << " 0][]";
+
+	return sendFeedbackCommand( os.str() );
+}
+
+
+/*
+ * Send feedback command via UDP.
+ */
+bool DTrackSDK::sendFeedbackCommand( const std::string& command )
+{
+	int err;
+
+	if ( ! isDataInterfaceValid() )
+		return false;
+
+	unsigned int ip = d_remoteIp;
+	if ( ip == 0 )  // if IP of Controller is not known, try IP of latest received UDP data
+	{
+		ip = d_udp->getRemoteIp();
+
+		if ( ip == 0 )
+			return false;
+	}
+
+	err = d_udp->send( ( void* )command.c_str(), ( int )command.length() + 1, ip, DTRACK2_PORT_FEEDBACK, d_udptimeout_us );
 	if ( err != 0 )
 	{
 		lastDataError = ERR_NET;
@@ -900,16 +962,5 @@ bool DTrackSDK::tactileHand( int handId, const std::vector< double >& strength )
 	}
 
 	return true;
-}
-
-
-/*
- * Send tactile command to turn off tactile feedback on all fingers of a specific hand.
- */
-bool DTrackSDK::tactileHandOff( int handId, int numFinger )
-{
-	std::vector< double > strength( numFinger, 0.0 );
-
-	return tactileHand( handId, strength );
 }
 

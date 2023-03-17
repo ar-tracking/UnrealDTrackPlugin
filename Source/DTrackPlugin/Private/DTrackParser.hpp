@@ -1,8 +1,8 @@
-/* DTrackParser: C++ header file, A.R.T. GmbH
+/* DTrackParser: C++ header file
  *
  * DTrackSDK: functions to process DTrack UDP packets (ASCII protocol).
  *
- * Copyright (c) 2013-2020, Advanced Realtime Tracking GmbH
+ * Copyright 2013-2021, Advanced Realtime Tracking GmbH & Co. KG
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
- * Version v2.6.0
- *
+ * Version v2.7.0
+ * 
  * Purpose:
  *  - DTrack network protocol according to:
  *    'DTrack2 User Manual, Technical Appendix' or 'DTrack3 Programmer's Guide'

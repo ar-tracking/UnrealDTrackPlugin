@@ -69,6 +69,7 @@ public:
 	// Gets the status of the sdk to see if an error is present
 	FString get_status() const;
 
+
 public:
 	//~ Begin FRunnable interface
 	virtual uint32 Run() override;
@@ -87,11 +88,20 @@ protected:
 	/// after receive, treat flystick info and send it to listeners
 	void handle_flysticks();
 
+	/// treat hand tracking info and send it to listeners
+	void handle_hands();
+
 	/// translate dtrack rotation matrix to rotator according to selected room calibration
 	FRotator from_dtrack_rotation(const double(&n_matrix)[9]);
-
+	
 	/// translate dtrack translation to unreal space
 	FVector from_dtrack_location(const double(&n_translation)[3]);
+
+	/// Compute each joint pose in world space from its raw information
+	void compute_finger_joint_pose(const FTransform& n_hand_transform, FDTrackFinger& out_finger, const float finger_x_rotation, const float finger_y_rotation, const float finger_z_rotation);
+
+	/// Return name for finger index
+	FString fingerName( int i );
 
 	/// Start measurement on the server if it's not already running. Returns false if it failed
 	bool start_measurement();
@@ -153,4 +163,5 @@ private:
 
 	/// transposed variant cached
 	static const FMatrix  m_trafo_unreal_adapted_transposed;
+
 };
