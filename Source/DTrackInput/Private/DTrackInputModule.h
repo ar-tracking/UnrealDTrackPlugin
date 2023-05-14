@@ -29,6 +29,9 @@
 
 #include "IDTrackInputModule.h"
 
+#include "InputCoreTypes.h"
+
+
 class FDTrackFlystickInputDevice;
 class ILiveLinkClient;
 class IModularFeature;
@@ -42,8 +45,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogDTrackInput, Log, All);
 class FDTrackInputModule : public IDTrackInputModule
 {
 public:
-
-	//~ Begin IInputDeviceModule implementation
+	virtual void StartupModule() override;
 	virtual TSharedPtr< class IInputDevice > CreateInputDevice(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler) override;
-	//~ End IInputDeviceModule implementation
 };
+

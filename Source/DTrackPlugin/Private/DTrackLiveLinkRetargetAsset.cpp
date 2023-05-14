@@ -184,15 +184,10 @@ void UDTrackLiveLinkRetargetAsset::BuildPoseFromAnimationData(
 	* To convert it to the unreal standard skeleton we add the ref-pose index location to the hand-bone.
 	*/
 
-	FVector indexLoc;
 	FVector indexRefLoc;
 	int32 handInt;
 	FVector handLoc, newLoc;
 	FQuat handRot, newRot;
-
-	FVector handX, handY, handZ;
-	FVector indexRefLoc_;
-	double shiftX = 10.5;
 
 
 	if (BoneToCPBIndexMap.Contains("hand_r") && BoneToCPBIndexMap.Contains("index_01_r"))
@@ -204,8 +199,7 @@ void UDTrackLiveLinkRetargetAsset::BuildPoseFromAnimationData(
 		handLoc      = InFrameData->Transforms[ handInt ].GetLocation();
 		indexRefLoc  = OutPose.GetRefPose( *BoneToCPBIndexMap.Find("index_01_r") ).GetLocation();
 
-		indexRefLoc_ =  handRot * indexRefLoc;
-		newLoc    =  handLoc + (-1) * indexRefLoc_;
+		newLoc    =  handLoc + (-1) * ( handRot * indexRefLoc );
 		newRot    =  handRot;
 
 		OutPose[ *BoneToCPBIndexMap.Find("hand_r") ].SetLocation( newLoc );
@@ -221,8 +215,7 @@ void UDTrackLiveLinkRetargetAsset::BuildPoseFromAnimationData(
 		handLoc      = InFrameData->Transforms[ handInt ].GetLocation();
 		indexRefLoc  = OutPose.GetRefPose( *BoneToCPBIndexMap.Find("index_01_l") ).GetLocation();
 
-		indexRefLoc_ =  handRot * indexRefLoc;
-		newLoc    =  handLoc + (-1) * indexRefLoc_; 
+		newLoc    =  handLoc + (-1) * ( handRot * indexRefLoc ); 
 		newRot    =  handRot;
 
 		OutPose[ *BoneToCPBIndexMap.Find("hand_l") ].SetLocation( newLoc );

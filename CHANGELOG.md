@@ -1,6 +1,13 @@
 
 # Changelog
 
+
+## v0.9.1
+
+- Custom flystick device
+- Fix of deprecated functions
+
+
 ## v0.9.0
 
 - Fingertracking support

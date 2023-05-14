@@ -43,8 +43,8 @@ class DTRACKINPUT_API IDTrackInputModule :  public IInputDeviceModule {
 		 *
 		 * @return Returns singleton instance, loading the module on demand if needed
 		 */
-		static inline IDTrackInputModule& Get() {
-		
+		static inline IDTrackInputModule& Get()
+		{
 			return FModuleManager::LoadModuleChecked<IDTrackInputModule>(DTrackInputModuleName);
 		}
 
@@ -53,8 +53,8 @@ class DTRACKINPUT_API IDTrackInputModule :  public IInputDeviceModule {
 		 *
 		 * @return True if the module is loaded and ready to use
 		 */
-		static inline bool IsAvailable() {
-			
+		static inline bool IsAvailable()
+		{	
 			return FModuleManager::Get().IsModuleLoaded(DTrackInputModuleName);
 		}
 };

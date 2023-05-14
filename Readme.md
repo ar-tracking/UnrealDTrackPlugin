@@ -5,7 +5,7 @@ This is a plug-in for the Unreal Engine with the purpose of native integration o
 
 ## Prerequisites
 
-- Unreal Engine 4 (tested with 4.27), Unreal Engine 5 (5.0.2 or later)
+- Unreal Engine 4 (4.23 or later), Unreal Engine 5 (5.0 or later)
 - Windows
 - Microsoft Visual Studio. See the [Unreal documentation][2] for selecting and installing the correct version.
 
@@ -19,8 +19,8 @@ This is a plug-in for the Unreal Engine with the purpose of native integration o
 
 ### Install into the global Engine plugin folder
 - Compile the plugin manually:
-  <br> *&lt;UEDir&gt;\Engine\Build\BatchFiles\RunUAT.bat* BuildPlugin -Plugin=*/Path/to/DTrackPlugin.uplugin* -TargetPlatforms=Win64 -Package=*&lt;OutDir&gt;* -Rocket *&lt;VS-version&gt;*
-  <br> Here *&lt;VS-version&gt;* designates the Visual Studio version chosen above (e.g. -VS2022).
+  <br> *&lt;UEDir&gt;\Engine\Build\BatchFiles\\*__RunUAT.bat__ &nbsp;__BuildPlugin__ __-Plugin=__*\Path\to\DTrackPlugin.uplugin* __-TargetPlatforms=__*Win64* __-Package=__*&lt;OutDir&gt;* __-Rocket__ __-VS20*XY*__
+  <br> Here *-VS20XY* designates the Visual Studio version chosen above (e.g. -VS2022).
 - Copy the folder *&lt;OutDir&gt;* to *&lt;UE4Dir&gt;\Engine\Plugins\DTrackPlugin*
 
 

@@ -38,6 +38,8 @@ namespace UnrealBuildTool.Rules
 			PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{
+					"InputCore",
+					"InputDevice",
 					"ApplicationCore",
 					"DTrackPlugin",
 				}
@@ -48,9 +50,7 @@ namespace UnrealBuildTool.Rules
 				{
 					"Core",
 					"CoreUObject",
-					"InputDevice",
 					"LiveLinkInterface",
-					"InputCore"
 				}
 			);
 		}

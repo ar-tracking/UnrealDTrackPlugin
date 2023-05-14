@@ -47,13 +47,13 @@ public:
 
 	// id of this flystick
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flystick")
-	int32 m_flystick_id;
+	int32 m_flystick_id = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flystick")
-	int32 m_button_count;
+	int32 m_button_count = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flystick")
-	int32 m_joystick_count;
+	int32 m_joystick_count = 0;
 };
 
 /**
@@ -104,7 +104,7 @@ public:
 
 	// Number of tracked fingers
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hands")
-		bool m_is_right_hand;
+		bool m_is_right_hand = true;
 
 	// Tracked finger types
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fingers")

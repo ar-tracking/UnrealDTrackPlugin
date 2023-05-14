@@ -27,6 +27,7 @@
 #pragma once
 
 #include "DTrackFlystickInputDevice.h"
+#include "DTrackInputFeatures.h"
 
 #include "Runtime/Launch/Resources/Version.h"
 
@@ -38,6 +39,20 @@
 #include "GenericPlatform/GenericApplicationMessageHandler.h"
 
 #include "InputCoreTypes.h"
+
+
+const FKey FDTrackInputKey::Flystick_Trigger( "Flystick_Trigger" );
+const FKey FDTrackInputKey::Flystick_Button1( "Flystick_Button1" );
+const FKey FDTrackInputKey::Flystick_Button2( "Flystick_Button2" );
+const FKey FDTrackInputKey::Flystick_Button3( "Flystick_Button3" );
+const FKey FDTrackInputKey::Flystick_Button4( "Flystick_Button4" );
+const FKey FDTrackInputKey::Flystick_Button5( "Flystick_Button5" );
+const FKey FDTrackInputKey::Flystick_Button6( "Flystick_Button6" );
+const FKey FDTrackInputKey::Flystick_Button7( "Flystick_Button7" );
+const FKey FDTrackInputKey::Flystick_Button8( "Flystick_Button8" );
+const FKey FDTrackInputKey::Flystick_JoystickX( "Flystick_JoystickX" );
+const FKey FDTrackInputKey::Flystick_JoystickY( "Flystick_JoystickY" );
+
 
 
 FDTrackFlystickInputDevice::FDTrackFlystickInputDevice(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler) 
@@ -54,19 +69,19 @@ FDTrackFlystickInputDevice::FDTrackFlystickInputDevice(const TSharedRef< FGeneri
 		ModularFeatures.OnModularFeatureRegistered().AddRaw(this, &FDTrackFlystickInputDevice::on_modular_feature_registerd);
 	}
 
-	m_button_mapping.Add( EKeys::Gamepad_LeftTrigger.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Bottom.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Right.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Left.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_FaceButton_Top.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_DPad_Up.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_DPad_Down.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_DPad_Right.GetFName() );
-	m_button_mapping.Add( EKeys::Gamepad_DPad_Left.GetFName() );
-
-	m_joystick_mapping.Add( EKeys::Gamepad_LeftX.GetFName() );
-	m_joystick_mapping.Add( EKeys::Gamepad_LeftY.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Trigger.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Button1.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Button2.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Button3.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Button4.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Button5.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Button6.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Button7.GetFName() );
+	m_button_mapping.Add( FDTrackInputKey::Flystick_Button8.GetFName() );
+	m_joystick_mapping.Add( FDTrackInputKey::Flystick_JoystickX.GetFName() );
+	m_joystick_mapping.Add( FDTrackInputKey::Flystick_JoystickY.GetFName() );
 }
+
 
 FDTrackFlystickInputDevice::~FDTrackFlystickInputDevice() {
 	
@@ -80,11 +95,44 @@ FDTrackFlystickInputDevice::~FDTrackFlystickInputDevice() {
 	}
 }
 
+
+void FDTrackFlystickInputDevice::PreInit()
+{
+	FName Flystick_Category = "ART_Flystick";
+	EKeys::AddMenuCategoryDisplayInfo( Flystick_Category, FText::AsCultureInvariant("A.R.T. Flystick"), TEXT("GraphEditor.PadEvent_16x") );
+
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Trigger,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Trigger.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Button1,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Button1.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Button2,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Button2.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Button3,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Button3.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Button4,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Button4.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Button5,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Button5.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Button6,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Button6.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Button7,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Button7.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_Button8,    FText::AsCultureInvariant( FDTrackInputKey::Flystick_Button8.GetFName().ToString() ),   FKeyDetails::GamepadKey, Flystick_Category) );
+	
+#if  ENGINE_MAJOR_VERSION < 4  || ( ENGINE_MAJOR_VERSION == 4  &&  ENGINE_MINOR_VERSION < 26 )
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_JoystickX,  FText::AsCultureInvariant( FDTrackInputKey::Flystick_JoystickX.GetFName().ToString() ), FKeyDetails::GamepadKey | FKeyDetails::FloatAxis, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_JoystickY,  FText::AsCultureInvariant( FDTrackInputKey::Flystick_JoystickY.GetFName().ToString() ), FKeyDetails::GamepadKey | FKeyDetails::FloatAxis, Flystick_Category) );
+#else
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_JoystickX,  FText::AsCultureInvariant( FDTrackInputKey::Flystick_JoystickX.GetFName().ToString() ), FKeyDetails::GamepadKey | FKeyDetails::Axis1D, Flystick_Category) );
+	EKeys::AddKey(FKeyDetails( FDTrackInputKey::Flystick_JoystickY,  FText::AsCultureInvariant( FDTrackInputKey::Flystick_JoystickY.GetFName().ToString() ), FKeyDetails::GamepadKey | FKeyDetails::Axis1D, Flystick_Category) );
+#endif
+}
+
+
 void FDTrackFlystickInputDevice::Tick(float DeltaTime) {
 
 }
 
-void FDTrackFlystickInputDevice::SendControllerEvents() {
+
+void FDTrackFlystickInputDevice::SendControllerEvents()
+{
+#if  ENGINE_MAJOR_VERSION >= 5
+	//FPlatformUserId UserId = FPlatformMisc::GetPlatformUserForUserIndex( LocalUserIndex );		// TODO
+	FPlatformUserId UserId = IPlatformInputDeviceMapper::Get().GetPrimaryPlatformUser();
+	FInputDeviceId DeviceId = INPUTDEVICEID_NONE;
+#endif
 
 	const double current_time = FPlatformTime::Seconds();
 
@@ -94,18 +142,22 @@ void FDTrackFlystickInputDevice::SendControllerEvents() {
 		FFlystickState& flystick_state = pair.Value;
 
 		FLiveLinkSubjectFrameData frame_data;
-		if (m_livelink_client->EvaluateFrame_AnyThread(flystick_name, UDTrackFlystickInputRole::StaticClass(), frame_data)) {
-
+		if (m_livelink_client->EvaluateFrame_AnyThread(flystick_name, UDTrackFlystickInputRole::StaticClass(), frame_data))
+		{
 			FDTrackFlystickInputStaticData* flystick_static_data = frame_data.StaticData.Cast<FDTrackFlystickInputStaticData>();
 			FDTrackFlystickInputFrameData* flystick_frame_data = frame_data.FrameData.Cast<FDTrackFlystickInputFrameData>();
 
-			if (!flystick_state.m_is_initialized) {
+			if (!flystick_state.m_is_initialized)
+			{
 				flystick_state.m_buttons_state.Init(false, flystick_static_data->m_button_count);
 				flystick_state.m_joysticks_state.Init(0.0f, flystick_static_data->m_joystick_count);
 				flystick_state.m_buttons_repeat_time.Init(0.0, flystick_static_data->m_button_count);
 				flystick_state.m_is_initialized = true;
 			}
 
+#if  ENGINE_MAJOR_VERSION >= 5
+			IPlatformInputDeviceMapper::Get().RemapControllerIdToPlatformUserAndDevice( flystick_static_data->m_flystick_id, UserId, DeviceId );
+#endif
 			//Process buttons
 			for (int32 i = 0; i < flystick_frame_data->m_button_state.Num(); ++i) 
 			{
@@ -116,22 +168,37 @@ void FDTrackFlystickInputDevice::SendControllerEvents() {
 					//UE_LOG( LogDTrackInput, Warning, TEXT( "flystick name %s id %d button %d state %d"), 
 					//	*flystick_name.ToString(), flystick_static_data->m_flystick_id, i, int( ! flystick_state.m_buttons_state[i] ) );
 
-					if (current_button_state)	{
-						m_message_handler->OnControllerButtonPressed(m_button_mapping[i], flystick_static_data->m_flystick_id, false);
-					}
-					else {
-						m_message_handler->OnControllerButtonReleased(m_button_mapping[i], flystick_static_data->m_flystick_id, false);
+					if (current_button_state)
+					{
+#if  ENGINE_MAJOR_VERSION >= 5
+						m_message_handler->OnControllerButtonPressed( m_button_mapping[i], UserId, DeviceId, false );
+#else
+						m_message_handler->OnControllerButtonPressed( m_button_mapping[i], flystick_static_data->m_flystick_id, false );
+#endif
 					}
 
-					if (current_button_state) {
-						flystick_state.m_buttons_repeat_time[i] = current_time + m_initial_button_repeat_delay;
+					else 
+					{
+#if  ENGINE_MAJOR_VERSION >= 5
+						m_message_handler->OnControllerButtonReleased( m_button_mapping[i], UserId, DeviceId, false );
+#else
+						m_message_handler->OnControllerButtonReleased( m_button_mapping[i], flystick_static_data->m_flystick_id, false );
+#endif
 					}
+
+					if (current_button_state) 
+						flystick_state.m_buttons_repeat_time[i] = current_time + m_initial_button_repeat_delay;
 
 					flystick_state.m_buttons_state[i] = current_button_state;
 				}
-				else if (current_button_state && flystick_state.m_buttons_repeat_time[i] < current_time) {
-					m_message_handler->OnControllerButtonPressed(m_button_mapping[i], flystick_static_data->m_flystick_id, true);
 
+				else if (current_button_state && flystick_state.m_buttons_repeat_time[i] < current_time)
+				{
+#if  ENGINE_MAJOR_VERSION >= 5
+					m_message_handler->OnControllerButtonPressed( m_button_mapping[i], UserId, DeviceId, true );
+#else
+					m_message_handler->OnControllerButtonPressed( m_button_mapping[i], flystick_static_data->m_flystick_id, true );
+#endif
 					flystick_state.m_buttons_repeat_time[i] = current_time + m_button_repeat_delay;
 				}
 			}
@@ -147,14 +214,19 @@ void FDTrackFlystickInputDevice::SendControllerEvents() {
 				if (current_joystick_state != flystick_state.m_joysticks_state[i])
 				{
 					flystick_changed = true;
-					m_message_handler->OnControllerAnalog( m_joystick_mapping[i], flystick_static_data->m_flystick_id, current_joystick_state);
+
+#if  ENGINE_MAJOR_VERSION >= 5
+					m_message_handler->OnControllerAnalog( m_joystick_mapping[i], UserId, DeviceId, current_joystick_state );
+#else
+					m_message_handler->OnControllerAnalog( m_joystick_mapping[i], flystick_static_data->m_flystick_id, current_joystick_state );
+#endif
 					flystick_state.m_joysticks_state[i] = current_joystick_state;
 				}
 			}
 		}
 	}
-	
 }
+
 
 void FDTrackFlystickInputDevice::SetMessageHandler(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler) {
 	m_message_handler = InMessageHandler;

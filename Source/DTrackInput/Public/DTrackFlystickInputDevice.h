@@ -27,7 +27,6 @@
 #pragma once
 
 #include "IInputDevice.h"
-
 #include "LiveLinkTypes.h"
 
 
@@ -46,6 +45,8 @@ public:
 
 public:
 	FLiveLinkSubjectKey get_subject_key() const;
+
+	static void PreInit();
 
 	//~Begin IInputDevice interface
 	virtual void Tick(float DeltaTime) override;

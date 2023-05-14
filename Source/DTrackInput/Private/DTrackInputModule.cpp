@@ -34,7 +34,15 @@ DEFINE_LOG_CATEGORY(LogDTrackInput);
 
 
 
-TSharedPtr< class IInputDevice > FDTrackInputModule::CreateInputDevice(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler) {
+void FDTrackInputModule::StartupModule()
+{
+	IInputDeviceModule::StartupModule();
+	FDTrackFlystickInputDevice::PreInit();
+}
+
+
+TSharedPtr< class IInputDevice > FDTrackInputModule::CreateInputDevice(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler)
+{
 	return TSharedPtr< class IInputDevice >(new FDTrackFlystickInputDevice(InMessageHandler));
 }
 

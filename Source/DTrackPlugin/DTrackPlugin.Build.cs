@@ -24,16 +24,17 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+
+
 namespace UnrealBuildTool.Rules
 {
     using System.IO;
     using System;
-	//using Tools.DotNETCommon;
 
 	public class DTrackPlugin : ModuleRules
 	{   
 		public DTrackPlugin(ReadOnlyTargetRules Target) : base(Target)
-		{
+		{	
 			bPrecompile = true;
 			PrivatePCHHeaderFile = "Private/DTrackPluginPrivatePCH.h";
 			PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
@@ -44,18 +45,37 @@ namespace UnrealBuildTool.Rules
 					// ... add other private include paths required here ...
 				}
 				);
+			
 
-            PublicDependencyModuleNames.AddRange(
-                new string[] {
-                    "Core",
-                    "CoreUObject",
-                    "Engine",
-                    "InputDevice",
-                    "LiveLinkInterface",
-					"LiveLinkAnimationCore",
-                }
-                );
-
+			BuildVersion Version;
+			
+			if ( BuildVersion.TryRead( BuildVersion.GetDefaultFileName(), out Version )  &&  Version.MajorVersion >= 5 ) 
+			{
+				PublicDependencyModuleNames.AddRange(
+					new string[] {
+						"Core",
+						"CoreUObject",
+						"Engine",
+						"InputDevice",
+						"LiveLinkInterface",
+                        "LiveLinkAnimationCore",
+                    }
+                    );
+			}
+			else
+			{
+				PublicDependencyModuleNames.AddRange(
+					new string[] {
+						"Core",
+						"CoreUObject",
+						"Engine",
+						"InputDevice",
+						"LiveLinkInterface",
+					}
+					);
+			}
+			
+			
 			PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{

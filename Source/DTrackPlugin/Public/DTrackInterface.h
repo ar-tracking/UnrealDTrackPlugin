@@ -85,22 +85,22 @@ public:
 		FTransform  m_inner_phalanx_transform;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Info", meta = (DisplayName = "Radius Of Tip"))
-		float    m_tip_radius;
+		float    m_tip_radius = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Info", meta = (DisplayName = "Inner Phalanx Length"))
-		float    m_inner_phalanx_length;
+		float    m_inner_phalanx_length = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Info", meta = (DisplayName = "Middle Phalanx Length"))
-		float    m_middle_phalanx_length;
+		float    m_middle_phalanx_length = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Info", meta = (DisplayName = "Outer Phalanx Length"))
-		float    m_outer_phalanx_length;
+		float    m_outer_phalanx_length = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Info", meta = (DisplayName = "Inner Middle Phalanx Angle"))
-		float    m_inner_middle_phalanx_angle;
+		float    m_inner_middle_phalanx_angle = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Info", meta = (DisplayName = "Middle Outer Phalanx Angle"))
-		float    m_middle_outer_phalanx_angle;
+		float    m_middle_outer_phalanx_angle = 0.0f;
 };
 
 
