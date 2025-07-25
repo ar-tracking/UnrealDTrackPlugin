@@ -25,6 +25,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "DTrackSDKHandler.h"
+#include "DTrackPlugin.h"
 
 #include "DTrackLiveLinkSource.h"
 #include "HAL/RunnableThread.h"
@@ -36,28 +37,21 @@
  */
 
 const FMatrix FDTrackSDKHandler::m_trafo_normal = FMatrix(
-	  FPlane( 1.0f, 0.0f,  0.0f, 0.0f )
-	, FPlane( 0.0f, 1.0f,  0.0f, 0.0f )
-	, FPlane( 0.0f, 0.0f, -1.0f, 0.0f )
-	, FPlane( 0.0f, 0.0f,  0.0f, 1.0f ));
-
-const FMatrix FDTrackSDKHandler::m_trafo_normal_transposed(m_trafo_normal.GetTransposed());
-
-const FMatrix FDTrackSDKHandler::m_trafo_powerwall = FMatrix(
-	  FPlane( 0.0f, 0.0f, -1.0f, 0.0f )
-	, FPlane( 1.0f, 0.0f,  0.0f, 0.0f )
-	, FPlane( 0.0f, 1.0f,  0.0f, 0.0f )
-	, FPlane( 0.0f, 0.0f,  0.0f, 1.0f ));
-
-const FMatrix FDTrackSDKHandler::m_trafo_powerwall_transposed(m_trafo_powerwall.GetTransposed());
-
-const FMatrix FDTrackSDKHandler::m_trafo_unreal_adapted = FMatrix(
 	  FPlane( 1.0f,  0.0f, 0.0f, 0.0f )
 	, FPlane( 0.0f, -1.0f, 0.0f, 0.0f )
 	, FPlane( 0.0f,  0.0f, 1.0f, 0.0f )
 	, FPlane( 0.0f,  0.0f, 0.0f, 1.0f ));
 
-const FMatrix FDTrackSDKHandler::m_trafo_unreal_adapted_transposed(m_trafo_unreal_adapted.GetTransposed());
+const FMatrix FDTrackSDKHandler::m_trafo_normal_transposed(m_trafo_normal.GetTransposed());
+
+const FMatrix FDTrackSDKHandler::m_trafo_powerwall = FMatrix(
+	  FPlane( 1.0f, 0.0f,  0.0f, 0.0f )
+	, FPlane( 0.0f, 0.0f,  1.0f, 0.0f )
+	, FPlane( 0.0f, 1.0f,  0.0f, 0.0f )
+	, FPlane( 0.0f, 0.0f,  0.0f, 1.0f ));
+
+const FMatrix FDTrackSDKHandler::m_trafo_powerwall_transposed(m_trafo_powerwall.GetTransposed());
+
 
 /**
  * FDTrackSDKHandler
@@ -85,9 +79,6 @@ bool FDTrackSDKHandler::start_listening(const FDTrackServerSettings& n_server_se
 	switch (m_server_settings.m_coordinate_system) {
 	case EDTrackCoordinateSystemType::CST_Normal:
 		UE_LOG( LogDTrackPlugin, Warning, TEXT("EDTrackCoordinateSystemType::CST_Normal") );
-		break;
-	case EDTrackCoordinateSystemType::CST_Unreal_Adapted:
-		UE_LOG( LogDTrackPlugin, Warning, TEXT("EDTrackCoordinateSystemType::CST_Unreal_Adapted") );
 		break;
 	case EDTrackCoordinateSystemType::CST_Powerwall:
 		UE_LOG( LogDTrackPlugin, Warning, TEXT("EDTrackCoordinateSystemType::CST_Powerwall") );
@@ -452,29 +443,23 @@ FVector FDTrackSDKHandler::from_dtrack_location(const double(&n_translation)[3])
 	switch (m_server_settings.m_coordinate_system) {
 		default:
 		case EDTrackCoordinateSystemType::CST_Normal:
-			ret.X = n_translation[1] / 10.0;
-			ret.Y = n_translation[0] / 10.0;
-			ret.Z = n_translation[2] / 10.0;
-			break;
-		case EDTrackCoordinateSystemType::CST_Unreal_Adapted:
-			ret.X = n_translation[0]  / 10.0;
-			ret.Y = -n_translation[1] / 10.0;
-			ret.Z = n_translation[2]  / 10.0;
+			ret.X =  n_translation[0]  / 10.0;
+			ret.Y = -n_translation[1]  / 10.0;
+			ret.Z =  n_translation[2]  / 10.0;
 			break;
 		case EDTrackCoordinateSystemType::CST_Powerwall:
-			ret.X = -n_translation[2] / 10.0;
-			ret.Y = n_translation[0]  / 10.0;
-			ret.Z = n_translation[1]  / 10.0;
+			ret.X =  n_translation[0]  / 10.0;
+			ret.Y =  n_translation[2]  / 10.0;
+			ret.Z =  n_translation[1]  / 10.0;
 			break;
 	}
 
 	return ret;
 }
 
-// translate a DTrack 3x3 rotation matrix (translation in mm) into Unreal Location (in cm)
+// translate a DTrack 3x3 rotation matrix to Unreal conventions
 FRotator FDTrackSDKHandler::from_dtrack_rotation(const double(&n_matrix)[9]) {
 
-	// take DTrack matrix and put the values into FMatrix 
 	// ( M[RowIndex][ColumnIndex], DTrack matrix comes column-wise )
 	FMatrix r;
 	r.M[0][0] = n_matrix[0 + 0]; r.M[0][1] = n_matrix[0 + 3]; r.M[0][2] = n_matrix[0 + 6]; r.M[0][3] = 0.0;
@@ -488,10 +473,6 @@ FRotator FDTrackSDKHandler::from_dtrack_rotation(const double(&n_matrix)[9]) {
 	default:
 	case EDTrackCoordinateSystemType::CST_Normal:
 		r_adapted = m_trafo_normal * r * m_trafo_normal_transposed;
-		break;
-
-	case EDTrackCoordinateSystemType::CST_Unreal_Adapted:
-		r_adapted = m_trafo_unreal_adapted * r * m_trafo_unreal_adapted_transposed;
 		break;
 
 	case EDTrackCoordinateSystemType::CST_Powerwall:

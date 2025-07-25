@@ -5,6 +5,7 @@ This is a plug-in for the Unreal Engine with the purpose of native integration o
 
 ## Prerequisites
 
+- A _DTRACK_ tracking system, see [Advanded Realtime Tracking][1]
 - Unreal Engine 4 (4.23 or later), Unreal Engine 5 (5.0 or later)
 - Windows
 - Microsoft Visual Studio. See the [Unreal documentation][2] for selecting and installing the correct version.

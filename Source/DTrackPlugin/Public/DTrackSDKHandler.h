@@ -30,9 +30,7 @@
 
 // Avoid 'warning C4005' when including DTrackSDK
 #include "Windows/AllowWindowsPlatformTypes.h"
-#include "Windows/PreWindowsApi.h"
 #include "DTrackSDK.hpp"
-#include "Windows/PostWindowsApi.h"
 #include "Windows/HideWindowsPlatformTypes.h"
 
 #include "HAL/Runnable.h"
@@ -157,11 +155,4 @@ private:
 
 	/// transposed variant cached
 	static const FMatrix  m_trafo_powerwall_transposed;
-
-	/// room coordinate adoption matrix for "unreal adapted" setting
-	static const FMatrix  m_trafo_unreal_adapted;
-
-	/// transposed variant cached
-	static const FMatrix  m_trafo_unreal_adapted_transposed;
-
 };

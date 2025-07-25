@@ -82,9 +82,6 @@ void FDTrackLiveLinkSource::InitializeSettings(ULiveLinkSourceSettings* InSettin
 	case EDTrackCoordinateSystemType::CST_Normal:
 		UE_LOG( LogDTrackPlugin, Warning, TEXT("EDTrackCoordinateSystemType::CST_Normal") );
 		break;
-	case EDTrackCoordinateSystemType::CST_Unreal_Adapted:
-		UE_LOG( LogDTrackPlugin, Warning, TEXT("EDTrackCoordinateSystemType::CST_Unreal_Adapted") );
-		break;
 	case EDTrackCoordinateSystemType::CST_Powerwall:
 		UE_LOG( LogDTrackPlugin, Warning, TEXT("EDTrackCoordinateSystemType::CST_Powerwall") );
 	default:

@@ -1,29 +1,31 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "0.9.1",
+	"VersionName": "0.9.3",
 	"FriendlyName": "DTrack Plugin",
-	"Description": "Plugin for the ART DTrack tracking system",
+	"Description": "Plugin for the ART DTrack tracking system.",
 	"Category": "Virtual Production",
-	"CreatedBy": "Advanced Realtime Tracking GmbH & Co. KG",
+	"CreatedBy": "Advanced Realtime Tracking GmbH",
 	"CreatedByURL": "https://ar-tracking.com",
 	"DocsURL": "https://github.com/ar-tracking/UnrealDTrackPlugin",
 	"MarketplaceURL": "",
 	"SupportURL": "https://ar-tracking.com/",
 	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": true,
 	"Installed": true,
 	"Modules": [
 		{
 			"Name": "DTrackPlugin",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
-			"WhitelistPlatforms": [ "Win64" ]
+			"PlatformAllowList": [ "Win64" ]
 		},
 		{
 			"Name": "DTrackInput",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
-			"WhitelistPlatforms": [ "Win64" ]
+			"PlatformAllowList": [ "Win64" ]
 		}
 	],
 	"Plugins": [
