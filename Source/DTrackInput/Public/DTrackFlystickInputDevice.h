@@ -30,6 +30,10 @@
 #include "LiveLinkTypes.h"
 
 
+// Only one FlyStick supported in current version
+#define MAX_NUM_FLYSTICK 1
+
+
 class ILiveLinkClient;
 class IModularFeature;
 

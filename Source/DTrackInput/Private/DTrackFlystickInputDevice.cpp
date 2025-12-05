@@ -273,10 +273,10 @@ void FDTrackFlystickInputDevice::on_livelink_subject_added_handler(FLiveLinkSubj
 	TSubclassOf<ULiveLinkRole> subject_role = m_livelink_client->GetSubjectRole(n_subject_key.SubjectName);
 #endif
 	
-	if (!subject_role->IsValidLowLevelFast())
+	if (!subject_role ||  !subject_role->IsValidLowLevelFast())
 		return;
 	
-	if (subject_role->IsChildOf(UDTrackFlystickInputRole::StaticClass()))
+	if (subject_role->IsChildOf(UDTrackFlystickInputRole::StaticClass())  &&  m_flysticks.Num() < MAX_NUM_FLYSTICK)
 	{
 		m_flysticks.Add(n_subject_key);
 		m_flystick_state.Add(n_subject_key.SubjectName);

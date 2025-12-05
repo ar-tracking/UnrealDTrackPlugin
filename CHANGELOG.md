@@ -1,7 +1,14 @@
 
 # Changelog
 
+## v0.9.4
+
+- Fixed missing flystick input with custom livelink presets containing subjects
+- Clean restriction to one flystick
+
+
 ## v0.9.3
+
 - Fixes for UE 5.4-5.6
 
 ## v0.9.1

@@ -220,6 +220,20 @@ void FDTrackLiveLinkSource::handle_flystick_body_anythread(double n_worldtime, d
 
 void FDTrackLiveLinkSource::handle_flystick_input_anythread(double n_worldtime, double n_timestamp, int32 n_itemId, TArray<bool>& n_temp_buttons, TArray<float>& n_temp_joysticks)
 {
+	// Check if our LiveLink client tries to use subjects we dont know about
+	if ( m_flystick_input_subjects.Num() == 0 )
+	{
+		TArray< FLiveLinkSubjectKey > subjects = 
+			m_client->GetSubjectsSupportingRole( UDTrackFlystickInputRole::StaticClass(), true, false);
+
+		for (const FLiveLinkSubjectKey& key : subjects)
+			m_client->RemoveSubject_AnyThread(key);
+
+		if ( subjects.Num() != 0 )
+			return;
+	}
+
+
 	FLiveLinkSubjectKey key;
 	{
 		FScopeLock Lock(&m_data_access_criticalsection);
